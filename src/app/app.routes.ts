@@ -1,6 +1,4 @@
 import { Routes } from '@angular/router';
-import { Readers } from './readers/readers';
+import { Readers } from './readers/readers-list/readers';
 
-export const routes: Routes = [
-    { path: 'readers', component: Readers },
-];
+export const routes: Routes = [{ path: 'readers', component: Readers }];

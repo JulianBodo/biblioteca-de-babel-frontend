@@ -7,8 +7,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { finalize, timeout } from 'rxjs';
-import { Reader } from '../shared/reader';
-import { ReaderService } from '../shared/reader-service';
+import { Reader } from '../../shared/reader';
+import { ReaderService } from '../../shared/services/reader-service';
 
 @Component({
   selector: 'app-readers',
@@ -116,8 +116,6 @@ export class Readers {
   }
 
   private replace(updated: Reader): void {
-    this.dataSource.update((readers) =>
-      readers.map((r) => (r.id === updated.id ? updated : r)),
-    );
+    this.dataSource.update((readers) => readers.map((r) => (r.id === updated.id ? updated : r)));
   }
 }
