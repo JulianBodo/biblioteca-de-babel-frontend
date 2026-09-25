@@ -1,13 +1,23 @@
 import { Routes } from '@angular/router';
 import { BookList } from './books/book-list/book-list';
-import { ReadersList } from './readers/readers-list/readers-list';
-import { Login } from './auth/login/login';
 import { authGuard } from './auth/auth.guard';
-import { LoansList } from './loans/loans-list/loans-list';
 
 export const routes: Routes = [
-  { path: 'login', component: Login },
+  {
+    path: 'login',
+    loadComponent: () => import('./auth/login/login').then((m) => m.Login),
+  },
   { path: '', component: BookList, canActivate: [authGuard] },
-  { path: 'readers', component: ReadersList, canActivate: [authGuard] },
-  { path: 'loans', component: LoansList, canActivate: [authGuard] },
+  {
+    path: 'readers',
+    loadComponent: () =>
+      import('./readers/readers-list/readers-list').then(m => m.ReadersList),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'loans',
+    loadComponent: () =>
+      import('./loans/loans-list/loans-list').then((m) => m.LoansList),
+    canActivate: [authGuard],
+  },
 ];
