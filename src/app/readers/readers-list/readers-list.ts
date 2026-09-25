@@ -1,30 +1,28 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { finalize, timeout } from 'rxjs';
-import { Reader } from '../../shared/reader';
-import { ReaderService } from '../../shared/services/reader-service';
+import { Reader } from '../../shared/models/reader.model';
+import { ReaderService } from '../../shared/services/reader.service';
 
 @Component({
-  selector: 'app-readers',
+  selector: 'app-readers-list',
   imports: [
     CommonModule,
-    RouterLink,
     MatButtonModule,
     MatTableModule,
     MatIconModule,
     MatProgressSpinnerModule,
     MatCardModule,
   ],
-  templateUrl: './readers.html',
-  styleUrl: './readers.css',
+  templateUrl: './readers-list.html',
+  styleUrl: './readers-list.css',
 })
-export class Readers {
+export class ReadersList {
   readonly dataSource = signal<Reader[]>([]);
   readonly displayedColumns: string[] = [
     'firstName',

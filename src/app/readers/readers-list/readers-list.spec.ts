@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Readers } from '../readers-list/readers';
+import { Readers } from './readers-list';
 
 describe('Readers', () => {
   let component: Readers;
