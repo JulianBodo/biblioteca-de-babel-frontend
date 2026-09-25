@@ -4,15 +4,15 @@ import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs';
 import { Book } from '../../shared/models/book.model';
-import { BookService } from '../../shared/services/book.services';
+import { BookService } from '../../shared/services/book.service';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-book-list',
   standalone: true,
   imports: [CommonModule, MatTableModule, MatProgressSpinnerModule],
-  templateUrl: './book.list.html',
-  styleUrl: './book.list.css',
+  templateUrl: './book-list.html',
+  styleUrl: './book-list.css',
 })
 export class BookList implements OnInit {
   readonly dataSource = signal<Book[]>([]);
