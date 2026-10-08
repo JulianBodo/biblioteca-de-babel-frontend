@@ -3,16 +3,21 @@ import { BookList } from './books/book-list/book-list';
 import { authGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+
   {
     path: 'login',
     loadComponent: () => import('./auth/login/login').then((m) => m.Login),
   },
-  { path: '', component: BookList, canActivate: [authGuard] },
+
+  // 2. Mueve BookList a su propia ruta protegida '/books'
+  { path: 'books', component: BookList, canActivate: [authGuard] },
+
   {
     path: 'readers',
     loadComponent: () =>
-      import('./readers/readers-list/readers-list').then(m => m.ReadersList),
-    canActivate: [authGuard]
+      import('./readers/readers-list/readers-list').then((m) => m.ReadersList),
+    canActivate: [authGuard],
   },
   {
     path: 'loans',
