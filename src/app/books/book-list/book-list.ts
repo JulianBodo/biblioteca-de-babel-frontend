@@ -1,16 +1,17 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, signal, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
 import { MatTableModule } from '@angular/material/table';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { finalize } from 'rxjs';
 import { Book } from '../../shared/models/book.model';
 import { BookService } from '../../shared/services/book.service';
 import { AuthService } from '../../auth/auth.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-book-list',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatProgressSpinnerModule],
+  imports: [CommonModule, MatTableModule, MatProgressSpinnerModule, RouterLink],
   templateUrl: './book-list.html',
   styleUrl: './book-list.css',
 })
@@ -20,9 +21,14 @@ export class BookList implements OnInit {
   readonly errorMessage = signal('');
   readonly displayedColumns = ['title', 'isbn', 'publicationYear', 'availableCopies'];
 
+  goBack(): void {
+    this.location.back();
+  }
+
   constructor(
     private readonly bookService: BookService,
     private readonly auth: AuthService,
+    private readonly location: Location,
   ) {}
 
   ngOnInit(): void {

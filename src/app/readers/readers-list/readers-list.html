@@ -1,9 +1,14 @@
 <main class="readers-page">
   <mat-card appearance="outlined" class="readers-card">
     <mat-card-header>
-      <mat-card-title>Lectores</mat-card-title>
-      <mat-card-subtitle>{{ dataSource().length }} lectores</mat-card-subtitle>
-    </mat-card-header>
+  <div class="header-content">
+    <a routerLink="/home" class="btn-back-material">
+      ← Volver al Home
+    </a>
+    <mat-card-title>Lectores</mat-card-title>
+    <mat-card-subtitle>Lista de usuarios registrados</mat-card-subtitle>
+  </div>
+</mat-card-header>
 
     <mat-card-content>
       <div *ngIf="errorMessage()" class="action-error" role="alert">

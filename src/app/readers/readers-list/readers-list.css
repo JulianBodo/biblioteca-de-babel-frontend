@@ -220,3 +220,28 @@ code {
     padding: 20px 16px 16px;
   }
 }
+.header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.btn-back-material {
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  color: var(--mat-sys-primary);
+  background-color: var(--mat-sys-surface-container);
+  border: 1px solid var(--mat-sys-outline-variant);
+  border-radius: 20px;
+  text-decoration: none;
+  font: var(--mat-sys-label-large);
+  transition: background-color 0.2s ease;
+}
+
+.btn-back-material:hover {
+  background-color: var(--mat-sys-surface-container-high);
+}

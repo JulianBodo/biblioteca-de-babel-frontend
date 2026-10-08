@@ -1,0 +1,32 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <h1>Sistema de Gestión de Biblioteca</h1>
+    <p>Selecciona una sección para comenzar a administrar el sistema</p>
+  </header>
+
+  <div class="cards-grid">
+    <!-- Tarjeta Libros -->
+    <div class="card">
+      <div class="card-icon">📚</div>
+      <h2>Libros</h2>
+      <p>Gestión del catálogo, altas, modificaciones y disponibilidad.</p>
+      <a routerLink="/books" class="btn">Ir a Libros</a>
+    </div>
+
+    <!-- Tarjeta Lectores -->
+    <div class="card">
+      <div class="card-icon">👥</div>
+      <h2>Lectores</h2>
+      <p>Administración de usuarios registrados y credenciales.</p>
+      <a routerLink="/readers" class="btn">Ir a Lectores</a>
+    </div>
+
+    <!-- Tarjeta Préstamos -->
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h2>Préstamos</h2>
+      <p>Control de salidas, devoluciones y libros pendientes.</p>
+      <a routerLink="/loans" class="btn">Ir a Préstamos</a>
+    </div>
+  </div>
+</div>

@@ -55,7 +55,7 @@ export class Login {
       .login(email!, password!)
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
-        next: () => this.router.navigateByUrl('/readers'),
+        next: () => this.router.navigateByUrl('/home'),
         error: (err) => {
           const status = err?.status;
           this.errorMessage.set(

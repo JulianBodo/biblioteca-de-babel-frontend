@@ -8,6 +8,7 @@ import { MatTableModule } from '@angular/material/table';
 import { finalize, timeout } from 'rxjs';
 import { Reader } from '../../shared/models/reader.model';
 import { ReaderService } from '../../shared/services/reader.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-readers-list',
@@ -18,6 +19,7 @@ import { ReaderService } from '../../shared/services/reader.service';
     MatIconModule,
     MatProgressSpinnerModule,
     MatCardModule,
+    RouterLink,
   ],
   templateUrl: './readers-list.html',
   styleUrl: './readers-list.css',

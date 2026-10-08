@@ -10,7 +10,13 @@ export const routes: Routes = [
     loadComponent: () => import('./auth/login/login').then((m) => m.Login),
   },
 
-  // 2. Mueve BookList a su propia ruta protegida '/books'
+  {
+    path: 'home',
+    loadComponent: () =>
+      import('./home/home').then((m) => m.Home),
+    canActivate: [authGuard],
+  },
+
   { path: 'books', component: BookList, canActivate: [authGuard] },
 
   {

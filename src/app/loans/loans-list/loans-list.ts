@@ -9,6 +9,7 @@ import { MatTableModule } from '@angular/material/table';
 import { finalize } from 'rxjs';
 import { Loan } from '../../shared/models/loan.model';
 import { LoanService } from '../../shared/services/loan.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-loans-list',
@@ -20,6 +21,7 @@ import { LoanService } from '../../shared/services/loan.service';
     MatChipsModule,
     MatProgressSpinnerModule,
     MatCardModule,
+    RouterLink,
   ],
   templateUrl: './loans-list.html',
   styleUrl: './loans-list.css',
