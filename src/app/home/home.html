@@ -5,7 +5,6 @@
   </header>
 
   <div class="cards-grid">
-    <!-- Tarjeta Libros -->
     <div class="card">
       <div class="card-icon">📚</div>
       <h2>Libros</h2>
@@ -13,7 +12,7 @@
       <a routerLink="/books" class="btn">Ir a Libros</a>
     </div>
 
-    <!-- Tarjeta Lectores -->
+
     <div class="card">
       <div class="card-icon">👥</div>
       <h2>Lectores</h2>
@@ -21,12 +20,17 @@
       <a routerLink="/readers" class="btn">Ir a Lectores</a>
     </div>
 
-    <!-- Tarjeta Préstamos -->
+
     <div class="card">
       <div class="card-icon">📋</div>
       <h2>Préstamos</h2>
       <p>Control de salidas, devoluciones y libros pendientes.</p>
       <a routerLink="/loans" class="btn">Ir a Préstamos</a>
     </div>
+  </div>
+  <div class="dashboard-footer">
+    <button (click)="logout()" class="btn-logout">
+      🚪 Cerrar Sesión
+    </button>
   </div>
 </div>
