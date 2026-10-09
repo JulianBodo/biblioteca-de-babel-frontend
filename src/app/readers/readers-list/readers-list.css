@@ -1,3 +1,7 @@
+.header-actions {
+  margin-bottom: 20px;
+}
+
 :host {
   display: block;
   min-height: 100%;
@@ -227,21 +231,30 @@ code {
   width: 100%;
 }
 
-.btn-back-material {
-  align-self: flex-start;
+.btn-back {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 6px 14px;
-  color: var(--mat-sys-primary);
-  background-color: var(--mat-sys-surface-container);
-  border: 1px solid var(--mat-sys-outline-variant);
-  border-radius: 20px;
+  padding: 8px 16px;
+  background-color: #f1f5f9;
+  color: #334155;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
   text-decoration: none;
-  font: var(--mat-sys-label-large);
-  transition: background-color 0.2s ease;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background-color 0.2s, border-color 0.2s;
 }
 
-.btn-back-material:hover {
-  background-color: var(--mat-sys-surface-container-high);
+.btn-back:hover {
+  background-color: #e2e8f0;
+  border-color: #94a3b8;
+}
+
+.btn-new {
+  margin-left: auto;
+}
+
+.empty-text {
+  padding: 24px;
+  color: var(--mat-sys-on-surface-variant);
 }

@@ -1,11 +1,17 @@
 <main class="loans-page">
   <div class="header-actions">
-    <a routerLink="/home" class="btn-back">← Volver al Home</a>
+    <a routerLink="/home" class="btn-back">↩ Volver al Menú</a>
   </div>
   <mat-card appearance="outlined" class="loans-card">
     <mat-card-header>
-      <mat-card-title>Préstamos</mat-card-title>
-      <mat-card-subtitle>{{ dataSource().length }} préstamos</mat-card-subtitle>
+      <div class="header-content">
+        <mat-card-title>Préstamos</mat-card-title>
+        <mat-card-subtitle>{{ dataSource().length }} préstamos</mat-card-subtitle>
+      </div>
+      <button mat-flat-button type="button" class="btn-new" (click)="create()">
+        <mat-icon>add</mat-icon>
+        Nuevo préstamo
+      </button>
     </mat-card-header>
 
     <mat-card-content>
@@ -21,6 +27,10 @@
           <mat-spinner diameter="44"></mat-spinner>
           <span>Cargando préstamos…</span>
         </div>
+      }
+
+      @if (!loading() && dataSource().length === 0 && !errorMessage()) {
+        <p class="empty-text">No hay préstamos registrados.</p>
       }
 
       @if (!loading() && dataSource().length > 0) {
@@ -74,19 +84,36 @@
               <th mat-header-cell *matHeaderCellDef>Acciones</th>
               <td mat-cell *matCellDef="let loan">
                 @if (loan.status === 'PENDING') {
-                  <button mat-button type="button" (click)="approve(loan)">
+                  <button mat-button type="button" [disabled]="busyIds().has(loan.id)" (click)="approve(loan)">
                     <mat-icon>check</mat-icon>
                     Aprobar
                   </button>
-                  <button mat-button type="button" (click)="reject(loan)">
+                  <button mat-button type="button" [disabled]="busyIds().has(loan.id)" (click)="reject(loan)">
                     <mat-icon>close</mat-icon>
                     Rechazar
                   </button>
                 }
                 @if (loan.status === 'ACTIVE') {
-                  <button mat-button type="button" (click)="returnLoan(loan)">
+                  <button mat-button type="button" [disabled]="busyIds().has(loan.id)" (click)="returnLoan(loan)">
                     <mat-icon>assignment_return</mat-icon>
                     Registrar devolución
+                  </button>
+                }
+                @if (canEdit(loan)) {
+                  <button mat-button type="button" (click)="edit(loan)">
+                    <mat-icon>event</mat-icon>
+                    Vencimiento
+                  </button>
+                }
+                @if (canDelete(loan)) {
+                  <button
+                    mat-button
+                    type="button"
+                    [disabled]="busyIds().has(loan.id)"
+                    (click)="remove(loan)"
+                  >
+                    <mat-icon>delete</mat-icon>
+                    Eliminar
                   </button>
                 }
               </td>

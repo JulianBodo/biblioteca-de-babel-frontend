@@ -32,3 +32,23 @@
   background-color: #e2e8f0;
   border-color: #94a3b8;
 }
+
+.btn-new {
+  margin-left: auto;
+}
+
+.empty-text {
+  padding: 24px;
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.action-error {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 16px 24px 0;
+  padding: 12px 16px;
+  border-radius: 6px;
+  color: var(--mat-sys-on-error-container);
+  background-color: var(--mat-sys-error-container);
+}

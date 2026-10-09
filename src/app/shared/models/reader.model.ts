@@ -16,4 +16,11 @@ export interface Reader {
   updatedAt: string;
 }
 
-export type ReaderUpdate = Partial<Pick<Reader, 'firstName' | 'lastName' | 'email' | 'dni'>>;
+export interface ReaderCreate {
+  firstName: string;
+  lastName: string;
+  email: string;
+  dni: string;
+}
+
+export type ReaderUpdate = Partial<ReaderCreate>;

@@ -1,13 +1,28 @@
 main {
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 24px;
 }
-table {
-  width: 100%;
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
 }
-.header-actions {
-  margin-bottom: 16px;
+
+.title-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.action-error {
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  color: var(--mat-sys-on-error-container);
+  background-color: var(--mat-sys-error-container);
 }
 
 .btn-back {

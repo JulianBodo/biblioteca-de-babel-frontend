@@ -12,7 +12,7 @@
       <a routerLink="/books" class="btn">Ir a Libros</a>
     </div>
 
-
+    @if (isStaff()) {
     <div class="card">
       <div class="card-icon">👥</div>
       <h2>Lectores</h2>
@@ -20,13 +20,13 @@
       <a routerLink="/readers" class="btn">Ir a Lectores</a>
     </div>
 
-
     <div class="card">
       <div class="card-icon">📋</div>
       <h2>Préstamos</h2>
       <p>Control de salidas, devoluciones y libros pendientes.</p>
       <a routerLink="/loans" class="btn">Ir a Préstamos</a>
     </div>
+    }
   </div>
   <div class="dashboard-footer">
     <button (click)="logout()" class="btn-logout">

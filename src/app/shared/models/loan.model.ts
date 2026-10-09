@@ -1,12 +1,7 @@
 import { Reader } from './reader.model';
+import { Author, Genre, Publisher } from './book.model';
 
 export type LoanStatus = 'PENDING' | 'ACTIVE' | 'RETURNED' | 'REJECTED';
-
-export interface Author {
-  id: number;
-  firstName: string;
-  lastName: string;
-}
 
 export interface LoanBook {
   id: number;
@@ -15,8 +10,8 @@ export interface LoanBook {
   publicationYear: number;
   totalCopies: number;
   availableCopies: number;
-  genre: { id: number; name: string };
-  publisher: { id: number; name: string };
+  genre: Genre;
+  publisher: Publisher;
   authors: Author[];
 }
 
@@ -37,4 +32,9 @@ export interface Loan {
   daysOverdue?: number;
   overdueNotice?: string | null;
   wasLate?: boolean;
+}
+
+export interface LoanCreate {
+  readerId: number;
+  bookId: number;
 }

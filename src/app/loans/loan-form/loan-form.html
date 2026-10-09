@@ -1,0 +1,81 @@
+<h2 mat-dialog-title>{{ editing ? 'Modificar vencimiento' : 'Nuevo préstamo' }}</h2>
+
+@if (editing) {
+  <form [formGroup]="editForm" (ngSubmit)="submit()">
+    <mat-dialog-content class="form-column">
+      <p class="hint">{{ summary }}</p>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Nuevo vencimiento</mat-label>
+        <input matInput type="date" formControlName="dueDate" />
+        @if (editForm.controls.dueDate.hasError('required')) {
+          <mat-error>La fecha es obligatoria</mat-error>
+        }
+      </mat-form-field>
+
+      @if (errorMessage()) {
+        <p class="form-error" role="alert">{{ errorMessage() }}</p>
+      }
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-button type="button" mat-dialog-close [disabled]="saving()">Cancelar</button>
+      <button mat-flat-button type="submit" [disabled]="saving()">
+        {{ saving() ? 'Guardando…' : 'Guardar' }}
+      </button>
+    </mat-dialog-actions>
+  </form>
+} @else {
+  <form [formGroup]="createForm" (ngSubmit)="submit()">
+    <mat-dialog-content class="form-column">
+      <mat-form-field appearance="outline">
+        <mat-label>Lector</mat-label>
+        <mat-select formControlName="readerId">
+          @for (reader of readers(); track reader.id) {
+            <mat-option [value]="reader.id">
+              {{ reader.lastName }}, {{ reader.firstName }} · DNI {{ reader.dni }}
+            </mat-option>
+          }
+        </mat-select>
+        @if (loadingReaders()) {
+          <mat-hint>Cargando lectores…</mat-hint>
+        } @else if (createForm.controls.readerId.invalid) {
+          <mat-error>Elegí un lector</mat-error>
+        } @else {
+          <mat-hint>Solo lectores en estado ACTIVE</mat-hint>
+        }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Libro</mat-label>
+        <mat-select formControlName="bookId">
+          @for (book of books(); track book.id) {
+            <mat-option [value]="book.id">
+              {{ book.title }} ({{ book.availableCopies }} disp.)
+            </mat-option>
+          }
+        </mat-select>
+        @if (loadingBooks()) {
+          <mat-hint>Cargando libros…</mat-hint>
+        } @else if (createForm.controls.bookId.disabled) {
+          <mat-hint>Elegí primero un lector</mat-hint>
+        } @else if (books().length === 0) {
+          <mat-hint>No hay libros disponibles para este lector</mat-hint>
+        } @else if (createForm.controls.bookId.invalid) {
+          <mat-error>Elegí un libro</mat-error>
+        }
+      </mat-form-field>
+
+      @if (errorMessage()) {
+        <p class="form-error" role="alert">{{ errorMessage() }}</p>
+      }
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+      <button mat-button type="button" mat-dialog-close [disabled]="saving()">Cancelar</button>
+      <button mat-flat-button type="submit" [disabled]="saving()">
+        {{ saving() ? 'Creando…' : 'Crear préstamo' }}
+      </button>
+    </mat-dialog-actions>
+  </form>
+}

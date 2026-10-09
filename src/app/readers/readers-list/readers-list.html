@@ -1,13 +1,17 @@
 <main class="readers-page">
+  <div class="header-actions">
+    <a routerLink="/home" class="btn-back">↩ Volver al Menú</a>
+  </div>
   <mat-card appearance="outlined" class="readers-card">
     <mat-card-header>
   <div class="header-content">
-    <a routerLink="/home" class="btn-back-material">
-      ← Volver al Home
-    </a>
     <mat-card-title>Lectores</mat-card-title>
     <mat-card-subtitle>Lista de usuarios registrados</mat-card-subtitle>
   </div>
+   <button mat-flat-button type="button" class="btn-new" (click)="create()">
+    <mat-icon>person_add</mat-icon>
+    Nuevo lector
+  </button>
 </mat-card-header>
 
     <mat-card-content>
@@ -20,6 +24,10 @@
         <mat-spinner diameter="44"></mat-spinner>
         <span>Cargando lectores…</span>
       </div>
+      
+      <p *ngIf="!loading() && dataSource().length === 0 && !errorMessage()" class="empty-text">
+        No hay lectores registrados.
+      </p>
 
       <div
         *ngIf="!loading() && dataSource().length > 0"
@@ -69,6 +77,7 @@
                 mat-button
                 type="button"
                 *ngIf="reader.readerStatus.status !== 'SUSPENDED'"
+                [disabled]="busyIds().has(reader.id)"
                 (click)="suspend(reader)"
               >
                 <mat-icon>block</mat-icon>
@@ -78,15 +87,27 @@
                 mat-button
                 type="button"
                 *ngIf="reader.readerStatus.status !== 'ACTIVE'"
+                [disabled]="busyIds().has(reader.id)"
                 (click)="reactivate(reader)"
               >
                 <mat-icon>check_circle</mat-icon>
                 Reactivar
               </button>
-              <button mat-button type="button" (click)="deleteReader(reader)">
-                <mat-icon>delete</mat-icon>
-                Eliminar
-              </button>
+              <ng-container *ngIf="isAdmin()">
+                <button mat-button type="button" (click)="edit(reader)">
+                  <mat-icon>edit</mat-icon>
+                  Editar
+                </button>
+                <button
+                  mat-button
+                  type="button"
+                  [disabled]="busyIds().has(reader.id)"
+                  (click)="deleteReader(reader)"
+                >
+                  <mat-icon>delete</mat-icon>
+                  Eliminar
+                </button>
+              </ng-container>
             </td>
           </ng-container>
 

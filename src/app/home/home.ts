@@ -12,6 +12,8 @@ export class Home {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
 
+  readonly isStaff = this.authService.isStaff;
+
   logout(): void {
     if (typeof this.authService.logout === 'function') {
       this.authService.logout();

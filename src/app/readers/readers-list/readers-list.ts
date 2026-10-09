@@ -1,14 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { finalize, timeout } from 'rxjs';
+import { AuthService } from '../../auth/auth.service';
 import { Reader } from '../../shared/models/reader.model';
 import { ReaderService } from '../../shared/services/reader.service';
-import { RouterLink } from '@angular/router';
+import { apiErrorMessage } from '../../shared/utils/api-error';
+import { ReaderForm, ReaderFormData } from '../reader-form/reader-form';
 
 @Component({
   selector: 'app-readers-list',
@@ -24,7 +28,14 @@ import { RouterLink } from '@angular/router';
   templateUrl: './readers-list.html',
   styleUrl: './readers-list.css',
 })
-export class ReadersList {
+export class ReadersList implements OnInit {
+  private readonly readerService = inject(ReaderService);
+  private readonly dialog = inject(MatDialog);
+  private readonly auth = inject(AuthService);
+
+  /** Según el backend, solo ADMIN puede editar y eliminar lectores. */
+  readonly isAdmin = this.auth.isAdmin;
+
   readonly dataSource = signal<Reader[]>([]);
   readonly displayedColumns: string[] = [
     'firstName',
@@ -39,9 +50,7 @@ export class ReadersList {
   readonly errorMessage = signal('');
   readonly busyIds = signal<ReadonlySet<number>>(new Set());
 
-  constructor(private readonly readerService: ReaderService) {}
-
-  ngOnInit() {
+  ngOnInit(): void {
     this.load();
   }
 
@@ -57,21 +66,20 @@ export class ReadersList {
       )
       .subscribe({
         next: (readers) => this.dataSource.set(readers),
-        error: () => this.errorMessage.set('No se pudieron cargar los lectores.'),
+        error: (err) =>
+          this.errorMessage.set(apiErrorMessage(err, 'No se pudieron cargar los lectores.')),
       });
   }
 
-  private withBusy(id: number, action: () => void): void {
-    if (this.busyIds().has(id)) return;
-    this.busyIds.update((ids) => new Set(ids).add(id));
-    action();
+  create(): void {
+    this.openForm({}).subscribe((saved) => {
+      if (saved) this.dataSource.update((readers) => [...readers, saved]);
+    });
   }
 
-  private clearBusy(id: number): void {
-    this.busyIds.update((ids) => {
-      const remaining = new Set(ids);
-      remaining.delete(id);
-      return remaining;
+  edit(reader: Reader): void {
+    this.openForm({ reader }).subscribe((saved) => {
+      if (saved) this.replace(saved);
     });
   }
 
@@ -82,7 +90,10 @@ export class ReadersList {
         .pipe(finalize(() => this.clearBusy(reader.id)))
         .subscribe({
           next: (updated) => this.replace(updated),
-          error: () => this.errorMessage.set(`No se pudo suspender a ${reader.firstName}.`),
+          error: (err) =>
+            this.errorMessage.set(
+              apiErrorMessage(err, `No se pudo suspender a ${reader.firstName}.`),
+            ),
         });
     });
   }
@@ -94,7 +105,10 @@ export class ReadersList {
         .pipe(finalize(() => this.clearBusy(reader.id)))
         .subscribe({
           next: (updated) => this.replace(updated),
-          error: () => this.errorMessage.set(`No se pudo reactivar a ${reader.firstName}.`),
+          error: (err) =>
+            this.errorMessage.set(
+              apiErrorMessage(err, `No se pudo reactivar a ${reader.firstName}.`),
+            ),
         });
     });
   }
@@ -110,8 +124,36 @@ export class ReadersList {
         .subscribe({
           next: () =>
             this.dataSource.update((readers) => readers.filter((r) => r.id !== reader.id)),
-          error: () => this.errorMessage.set(`No se pudo eliminar a ${reader.firstName}.`),
+          error: (err) =>
+            this.errorMessage.set(
+              apiErrorMessage(err, `No se pudo eliminar a ${reader.firstName}.`),
+            ),
         });
+    });
+  }
+
+  private openForm(data: ReaderFormData) {
+    return this.dialog
+      .open<ReaderForm, ReaderFormData, Reader>(ReaderForm, {
+        data,
+        width: '560px',
+        maxWidth: '95vw',
+      })
+      .afterClosed();
+  }
+
+  private withBusy(id: number, action: () => void): void {
+    if (this.busyIds().has(id)) return;
+    this.errorMessage.set('');
+    this.busyIds.update((ids) => new Set(ids).add(id));
+    action();
+  }
+
+  private clearBusy(id: number): void {
+    this.busyIds.update((ids) => {
+      const remaining = new Set(ids);
+      remaining.delete(id);
+      return remaining;
     });
   }
 

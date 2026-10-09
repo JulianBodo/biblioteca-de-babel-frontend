@@ -1,4 +1,4 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, computed } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
@@ -6,14 +6,19 @@ import { tap } from 'rxjs';
 export interface AuthUser {
   id: number;
   email: string;
-  role: 'ADMIN' | 'LIBRARIAN' | 'READER';
+  role: Role;
   readerId: number | null;
 }
+
+export type Role = 'ADMIN' | 'LIBRARIAN' | 'READER';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   readonly currentUser = signal<AuthUser | null>(this.readStoredUser());
   readonly isLoggedIn = signal<boolean>(!!this.getToken());
+  readonly role = computed<Role | null>(() => this.currentUser()?.role ?? null);
+  readonly isAdmin = computed(() => this.role() === 'ADMIN');
+  readonly isStaff = computed(() => this.role() === 'ADMIN' || this.role() === 'LIBRARIAN');
 
   constructor(
     private http: HttpClient,
@@ -34,6 +39,11 @@ export class AuthService {
           this.isLoggedIn.set(true);
         }),
       );
+  }
+  
+  hasRole(...roles: Role[]): boolean {
+    const current = this.role();
+    return current !== null && roles.includes(current);
   }
 
   getToken(): string | null {

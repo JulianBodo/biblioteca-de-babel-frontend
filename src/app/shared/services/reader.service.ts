@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Reader, ReaderUpdate } from '../models/reader.model';
+import { Reader, ReaderUpdate, ReaderCreate } from '../models/reader.model';
 
 @Injectable({
   providedIn: 'root',
@@ -18,6 +18,10 @@ export class ReaderService {
 
   getReader(id: number): Observable<Reader> {
     return this.httpClient.get<Reader>(`${this.apiUrl}/readers/${id}`);
+  }
+  
+  createReader(input: ReaderCreate): Observable<Reader> {
+    return this.httpClient.post<Reader>(`${this.apiUrl}/readers`, input);
   }
 
   updateReader(id: number, changes: ReaderUpdate): Observable<Reader> {
