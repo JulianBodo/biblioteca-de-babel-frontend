@@ -46,6 +46,19 @@ export class BookForm implements OnInit {
   readonly genres = signal<Genre[]>([]);
   readonly publishers = signal<Publisher[]>([]);
 
+  readonly authorForm = this.formBuilder.nonNullable.group({
+    firstName: ['', Validators.required],
+    lastName: ['', Validators.required],
+  });
+
+  readonly publisherForm = this.formBuilder.nonNullable.group({
+    name: ['', Validators.required],
+  });
+
+  readonly creatingCatalog = signal(false);
+  readonly catalogErrorMessage = signal('');
+  readonly newCatalogType = signal<'author' | 'genre' | 'publisher' | null>(null);
+
   readonly form = this.formBuilder.nonNullable.group({
     title: [this.data.book?.title ?? '', [Validators.required]],
     isbn: [this.data.book?.isbn ?? '', [Validators.required]],
@@ -96,5 +109,70 @@ export class BookForm implements OnInit {
       error: (err) =>
         this.errorMessage.set(apiErrorMessage(err, 'No se pudo guardar el libro.')),
     });
+  }
+
+  openCatalogForm(type: 'author' | 'publisher'): void {
+    this.catalogErrorMessage.set('');
+    this.newCatalogType.set(type);
+  }
+
+  cancelCatalogForm(): void {
+    this.newCatalogType.set(null);
+    this.catalogErrorMessage.set('');
+    this.authorForm.reset();
+    this.publisherForm.reset();
+  }
+
+  createAuthor(): void {
+    if (this.authorForm.invalid) {
+      this.authorForm.markAllAsTouched();
+      return;
+    }
+
+    this.creatingCatalog.set(true);
+    this.catalogErrorMessage.set('');
+
+    this.catalogService
+      .createAuthor(this.authorForm.getRawValue())
+      .pipe(finalize(() => this.creatingCatalog.set(false)))
+      .subscribe({
+        next: (author) => {
+          this.authors.update((items) => [...items, author]);
+
+          const selected = this.form.controls.authorIds.value;
+          this.form.controls.authorIds.setValue([...selected, author.id]);
+
+          this.cancelCatalogForm();
+        },
+        error: (err) =>
+          this.catalogErrorMessage.set(
+            apiErrorMessage(err, 'No se pudo crear el autor.'),
+          ),
+      });
+  }
+
+  createPublisher(): void {
+    if (this.publisherForm.invalid) {
+      this.publisherForm.markAllAsTouched();
+      return;
+    }
+
+    this.creatingCatalog.set(true);
+    this.catalogErrorMessage.set('');
+
+    this.catalogService
+      .createPublisher(this.publisherForm.getRawValue())
+      .pipe(finalize(() => this.creatingCatalog.set(false)))
+      .subscribe({
+        next: (publisher) => {
+          this.publishers.update((items) => [...items, publisher]);
+          this.form.controls.publisherId.setValue(publisher.id);
+          this.cancelCatalogForm();
+        },
+        error: (err) =>
+          this.catalogErrorMessage.set(
+            apiErrorMessage(err, 'No se pudo crear la editorial.'),
+          ),
+      });
   }
 }

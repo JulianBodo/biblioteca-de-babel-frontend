@@ -33,7 +33,6 @@ export class ReadersList implements OnInit {
   private readonly dialog = inject(MatDialog);
   private readonly auth = inject(AuthService);
 
-  /** Según el backend, solo ADMIN puede editar y eliminar lectores. */
   readonly isAdmin = this.auth.isAdmin;
 
   readonly dataSource = signal<Reader[]>([]);
