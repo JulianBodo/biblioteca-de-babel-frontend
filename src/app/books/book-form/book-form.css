@@ -34,3 +34,7 @@
     grid-column: span 1;
   }
 }
+
+.full-width {
+  width: 100%;
+}
