@@ -1,10 +1,13 @@
+
 import { Component, inject } from '@angular/core';
 import { RouterLink, Router } from '@angular/router';
 import { AuthService } from '../auth/auth.service';
+import { MatIconModule } from '@angular/material/icon';
+
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, MatIconModule],
   templateUrl: './home.html',
   styleUrl: './home.css'
 })
@@ -20,6 +23,7 @@ export class Home {
     } else {
       localStorage.clear(); // O sessionStorage.clear() si guardas el token allí
     }
+
     this.router.navigate(['/login']);
   }
 }

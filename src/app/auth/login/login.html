@@ -2,20 +2,32 @@
   <div class="login-wrapper">
 
     <header class="login-header">
-      <h1>Sistema de Gestión de Biblioteca</h1>
-      <p>Ingresá tus credenciales para acceder al sistema</p>
+      <div class="login-brand">
+        <mat-icon class="brand-icon" aria-hidden="true">
+          auto_stories
+        </mat-icon>
+
+        <h1>BIBLIOTECA DE BABEL</h1>
+      </div>
+
+      <p>Sistema de Gestión Bibliotecario</p>
     </header>
 
     <mat-card appearance="outlined" class="login-card">
       <mat-card-header>
         <mat-card-title>Iniciar sesión</mat-card-title>
+        <mat-card-subtitle>
+          Ingresá tus credenciales para acceder al sistema
+        </mat-card-subtitle>
       </mat-card-header>
 
       <mat-card-content>
         <form [formGroup]="form" (ngSubmit)="submit()">
+
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Email</mat-label>
             <input matInput type="email" formControlName="email" autocomplete="email" />
+
             @if (form.get('email')?.invalid && form.get('email')?.touched) {
             <mat-error>Ingresá un email válido</mat-error>
             }
@@ -24,6 +36,7 @@
           <mat-form-field appearance="outline" class="full-width">
             <mat-label>Contraseña</mat-label>
             <input matInput type="password" formControlName="password" autocomplete="current-password" />
+
             @if (form.get('password')?.invalid && form.get('password')?.touched) {
             <mat-error>La contraseña es obligatoria</mat-error>
             }
@@ -40,9 +53,14 @@
             Ingresar
             }
           </button>
+
         </form>
       </mat-card-content>
     </mat-card>
+
+    <footer class="login-footer">
+      <p>Biblioteca de Babel · Gestión bibliotecaria</p>
+    </footer>
 
   </div>
 </div>
