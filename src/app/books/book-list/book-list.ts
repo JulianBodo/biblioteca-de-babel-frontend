@@ -13,6 +13,7 @@ import { Book } from '../../shared/models/book.model';
 import { BookService } from '../../shared/services/book.service';
 import { apiErrorMessage } from '../../shared/utils/api-error';
 import { BookForm, BookFormData } from '../book-form/book-form';
+import { LoanService } from '../../shared/services/loan.service';
 
 @Component({
   selector: 'app-book-list',
@@ -43,7 +44,7 @@ export class BookList implements OnInit {
 
   readonly displayedColumns = computed(() => {
     const columns = ['title', 'authors', 'genre', 'isbn', 'publicationYear', 'copies'];
-    return this.canManage() ? [...columns, 'actions'] : columns;
+    return this.canManage() || this.canRequestLoan() ? [...columns, 'actions'] : columns;
   });
 
   ngOnInit(): void {
@@ -107,6 +108,41 @@ export class BookList implements OnInit {
       });
   }
 
+  private readonly loanService = inject(LoanService);
+
+  readonly canRequestLoan = computed(() => this.auth.hasRole('READER'));
+
+  readonly requestingIds = signal<ReadonlySet<number>>(new Set());
+  readonly successMessage = signal('');
+
+  requestLoan(book: Book): void {
+    if (this.requestingIds().has(book.id)) return;
+
+    this.errorMessage.set('');
+    this.successMessage.set('');
+
+    this.requestingIds.update((ids) => new Set(ids).add(book.id));
+
+    this.loanService
+      .createLoan({ bookId: book.id })
+      .pipe(
+        finalize(() =>
+          this.requestingIds.update((ids) => {
+            const remaining = new Set(ids);
+            remaining.delete(book.id);
+            return remaining;
+          }),
+        ),
+      )
+      .subscribe({
+        next: () => {
+          this.successMessage.set(`Solicitud de préstamo enviada para "${book.title}".`);
+        },
+        error: (err) => {
+          this.errorMessage.set(apiErrorMessage(err, 'No se pudo solicitar el préstamo.'));
+        },
+      });
+  }
   private openForm(data: BookFormData) {
     return this.dialog
       .open<BookForm, BookFormData, Book>(BookForm, { data, width: '640px', maxWidth: '95vw' })
