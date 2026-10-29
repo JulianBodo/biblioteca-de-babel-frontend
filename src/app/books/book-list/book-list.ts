@@ -116,6 +116,13 @@ export class BookList implements OnInit {
   requestLoan(book: Book): void {
     if (this.requestingIds().has(book.id)) return;
 
+    const confirmed = window.confirm(
+      `¿Estás seguro de que querés solicitar el préstamo del libro "${book.title}"?`,
+    );
+
+    // Si el usuario cancela, no se procesa la solicitud.
+    if (!confirmed) return;
+
     this.errorMessage.set('');
     this.successMessage.set('');
 
