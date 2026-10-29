@@ -174,15 +174,34 @@ code {
 }
 
 .status-badge {
-  gap: 7px;
-  padding: 0 10px;
+  display: inline-flex;
+  min-width: 42px;
+  min-height: 28px;
+  box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font: var(--mat-sys-label-medium);
+  font-variant-numeric: tabular-nums;
   color: var(--mat-sys-on-surface-variant);
   background-color: var(--mat-sys-surface-container-high);
+  white-space: nowrap;
 }
 
-.status-badge.alive {
-  color: var(--mat-sys-on-tertiary-container);
-  background-color: var(--mat-sys-tertiary-container);
+.status-badge.active {
+  color: #166534;
+  background-color: #dcfce7;
+}
+
+.status-badge.suspended {
+  color: #991b1b;
+  background-color: #fee2e2;
+}
+
+.status-badge.inactive {
+  color: #374151;
+  background-color: #e5e7eb;
 }
 
 .status-dot {
