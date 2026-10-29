@@ -35,6 +35,6 @@ export interface Loan {
 }
 
 export interface LoanCreate {
-  readerId: number;
   bookId: number;
+  readerId?: number;
 }

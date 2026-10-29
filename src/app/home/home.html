@@ -1,9 +1,8 @@
 <div class="dashboard-container">
   <header class="dashboard-header">
     <div class="dashboard-brand">
-      <mat-icon class="brand-icon" aria-hidden="true">
-        auto_stories
-      </mat-icon>
+      <button (click)="logout()" class="btn-logout">❌ Cerrar Sesión</button>
+      <mat-icon class="brand-icon" aria-hidden="true"> auto_stories </mat-icon>
 
       <h1>BIBLIOTECA DE BABEL</h1>
     </div>
@@ -37,9 +36,5 @@
     }
   </div>
 
-  <div class="dashboard-footer">
-    <button (click)="logout()" class="btn-logout">
-      ❌ Cerrar Sesión
-    </button>
-  </div>
+  <div class="dashboard-footer"></div>
 </div>
