@@ -52,3 +52,39 @@
   color: var(--mat-sys-on-error-container);
   background-color: var(--mat-sys-error-container);
 }
+
+.status-active,
+.status-pending,
+.status-rejected,
+.status-returned {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  border: none;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.status-active {
+  background-color: #dcfce7;
+  color: #166534;
+}
+
+.status-pending {
+  background-color: #fef3c7;
+  color: #92400e;
+}
+
+.status-rejected {
+  background-color: #fee2e2;
+  color: #991b1b;
+}
+
+.status-returned {
+  background-color: #e5e7eb;
+  color: #374151;
+}
