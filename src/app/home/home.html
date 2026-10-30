@@ -1,7 +1,10 @@
 <div class="dashboard-container">
   <header class="dashboard-header">
     <div class="dashboard-brand">
-      <button (click)="logout()" class="btn-logout">❌ Cerrar Sesión</button>
+      <button (click)="logout()" class="btn-logout">
+        <mat-icon>exit_to_app</mat-icon>
+        Cerrar Sesión
+      </button>
       <mat-icon class="brand-icon" aria-hidden="true"> auto_stories </mat-icon>
 
       <h1>BIBLIOTECA DE BABEL</h1>
@@ -20,19 +23,19 @@
     </div>
 
     @if (isStaff()) {
-      <div class="card">
-        <div class="card-icon">👥</div>
-        <h2>Lectores</h2>
-        <p>Administración de usuarios registrados y credenciales.</p>
-        <a routerLink="/readers" class="btn">Ir a Lectores</a>
-      </div>
+    <div class="card">
+      <div class="card-icon">👥</div>
+      <h2>Lectores</h2>
+      <p>Administración de usuarios registrados y credenciales.</p>
+      <a routerLink="/readers" class="btn">Ir a Lectores</a>
+    </div>
 
-      <div class="card">
-        <div class="card-icon">📋</div>
-        <h2>Préstamos</h2>
-        <p>Control de salidas, devoluciones y libros pendientes.</p>
-        <a routerLink="/loans" class="btn">Ir a Préstamos</a>
-      </div>
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h2>Préstamos</h2>
+      <p>Control de salidas, devoluciones y libros pendientes.</p>
+      <a routerLink="/loans" class="btn">Ir a Préstamos</a>
+    </div>
     }
   </div>
 

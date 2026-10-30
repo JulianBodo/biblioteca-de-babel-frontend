@@ -110,6 +110,10 @@
 }
 
 .btn-logout {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
   background-color: #ef4444;
   color: #ffffff;
   border: none;
@@ -124,14 +128,20 @@
   right: 12px;
   white-space: nowrap;
 }
+
 @media (max-width: 600px) {
   .btn-logout {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
     top: 8px;
     right: 8px;
     padding: 5px 8px;
     font-size: 10px;
   }
 }
+
 .dashboard-footer {
   display: flex;
   justify-content: center;
@@ -160,4 +170,11 @@
   .dashboard-footer {
     margin-top: 4rem;
   }
+}
+
+.btn-logout mat-icon {
+  width: 16px;
+  height: 16px;
+  font-size: 16px;
+  line-height: 16px;
 }

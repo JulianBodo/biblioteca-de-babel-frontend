@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
+import { MatCardModule } from '@angular/material/card';
 import { finalize } from 'rxjs';
 import { AuthService } from '../../auth/auth.service';
 import { Book } from '../../shared/models/book.model';
@@ -23,6 +24,7 @@ import { LoanService } from '../../shared/services/loan.service';
     MatIconModule,
     MatTableModule,
     MatProgressSpinnerModule,
+    MatCardModule,
   ],
   templateUrl: './book-list.html',
   styleUrl: './book-list.css',
