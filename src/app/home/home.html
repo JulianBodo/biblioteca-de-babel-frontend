@@ -5,7 +5,10 @@
         <mat-icon>exit_to_app</mat-icon>
         Cerrar Sesión
       </button>
-      <mat-icon class="brand-icon" aria-hidden="true"> auto_stories </mat-icon>
+
+      <mat-icon class="brand-icon" aria-hidden="true">
+        auto_stories
+      </mat-icon>
 
       <h1>BIBLIOTECA DE BABEL</h1>
     </div>
@@ -22,20 +25,29 @@
       <a routerLink="/books" class="btn">Ir a Libros</a>
     </div>
 
-    @if (isStaff()) {
-    <div class="card">
-      <div class="card-icon">👥</div>
-      <h2>Lectores</h2>
-      <p>Administración de usuarios registrados y credenciales.</p>
-      <a routerLink="/readers" class="btn">Ir a Lectores</a>
-    </div>
+    @if (isAdmin()) {
+      <div class="card">
+        <div class="card-icon">👥</div>
+        <h2>Lectores</h2>
+        <p>Administración de usuarios registrados y credenciales.</p>
+        <a routerLink="/readers" class="btn">Ir a Lectores</a>
+      </div>
 
-    <div class="card">
-      <div class="card-icon">📋</div>
-      <h2>Préstamos</h2>
-      <p>Control de salidas, devoluciones y libros pendientes.</p>
-      <a routerLink="/loans" class="btn">Ir a Préstamos</a>
-    </div>
+      <div class="card">
+        <div class="card-icon">📋</div>
+        <h2>Préstamos</h2>
+        <p>Control de salidas, devoluciones y libros pendientes.</p>
+        <a routerLink="/loans" class="btn">Ir a Préstamos</a>
+      </div>
+    }
+
+    @if (isReader()) {
+      <div class="card">
+        <div class="card-icon">📖</div>
+        <h2>Mis préstamos</h2>
+        <p>Consultá tus préstamos activos y sus fechas de vencimiento.</p>
+        <a routerLink="/loans" class="btn">Ver mis préstamos</a>
+      </div>
     }
   </div>
 

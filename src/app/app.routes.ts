@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { BookList } from './books/book-list/book-list';
 import { authGuard } from './auth/auth.guard';
 import { roleGuard } from './auth/role.guard';
 
@@ -8,7 +7,7 @@ export const routes: Routes = [
 
   {
     path: 'login',
-    loadComponent: () => 
+    loadComponent: () =>
       import('./auth/login/login').then((m) => m.Login),
   },
 
@@ -19,8 +18,8 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
 
-  { 
-    path: 'books', 
+  {
+    path: 'books',
     loadComponent: () => import('./books/book-list/book-list').then((m) => m.BookList),
     canActivate: [authGuard],
   },
@@ -29,12 +28,13 @@ export const routes: Routes = [
     path: 'readers',
     loadComponent: () =>
       import('./readers/readers-list/readers-list').then((m) => m.ReadersList),
-    canActivate: [roleGuard('ADMIN', 'LIBRARIAN')],
+    canActivate: [roleGuard('ADMIN')],
   },
 
   {
     path: 'loans',
-    loadComponent: () => import('./loans/loans-list/loans-list').then((m) => m.LoansList),
-    canActivate: [roleGuard('ADMIN', 'LIBRARIAN')],
+    loadComponent: () =>
+      import('./loans/loans-list/loans-list').then((m) => m.LoansList),
+    canActivate: [roleGuard('ADMIN', 'READER')],
   },
 ];

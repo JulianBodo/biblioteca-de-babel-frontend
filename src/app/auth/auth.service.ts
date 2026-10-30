@@ -10,7 +10,7 @@ export interface AuthUser {
   readerId: number | null;
 }
 
-export type Role = 'ADMIN' | 'LIBRARIAN' | 'READER';
+export type Role = 'ADMIN' | 'READER';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -18,7 +18,6 @@ export class AuthService {
   readonly isLoggedIn = signal<boolean>(!!this.getToken());
   readonly role = computed<Role | null>(() => this.currentUser()?.role ?? null);
   readonly isAdmin = computed(() => this.role() === 'ADMIN');
-  readonly isStaff = computed(() => this.role() === 'ADMIN' || this.role() === 'LIBRARIAN');
 
   constructor(
     private http: HttpClient,

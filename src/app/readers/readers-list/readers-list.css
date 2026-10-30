@@ -50,10 +50,6 @@ mat-card-content {
   padding: 0;
 }
 
-.header-actions {
-  margin-bottom: 20px;
-}
-
 .btn-back {
   display: inline-flex;
   align-items: center;
@@ -216,11 +212,11 @@ table {
 }
 
 .actions-column button mat-icon {
-  width: 16px;
-  height: 16px;
-  min-width: 16px;
-  font-size: 16px;
-  line-height: 16px;
+  width: 14px;
+  height: 14px;
+  min-width: 14px;
+  font-size: 14px;
+  line-height: 14px;
   margin: 0;
 }
 
@@ -242,23 +238,13 @@ table {
     align-items: center;
     justify-content: flex-start;
     gap: 5px;
-    min-width: 0;
-    min-height: 26px;
-    height: 26px;
     padding: 0 4px;
     margin: 3px 0px;
-    border-radius: 6px;
-    font-size: 10px;
-    font-weight: 500;
-    line-height: 1;
-    box-sizing: border-box;
-    white-space: nowrap;
   }
 
   .actions-column button mat-icon {
     width: 14px;
     height: 14px;
-    min-width: 14px;
     font-size: 14px;
     line-height: 14px;
     margin-right: 3px;

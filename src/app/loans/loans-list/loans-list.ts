@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -36,13 +36,23 @@ export class LoansList implements OnInit {
   private readonly auth = inject(AuthService);
 
   readonly dataSource = signal<Loan[]>([]);
-  readonly displayedColumns = ['id', 'reader', 'book', 'status', 'dueDate', 'mora', 'actions'];
+  readonly isReader = computed(() => this.auth.role() === 'READER');
+
+  readonly displayedColumns = computed(() =>
+    this.isReader()
+      ? ['id', 'book', 'status', 'dueDate', 'mora']
+      : ['id', 'reader', 'book', 'status', 'dueDate', 'mora', 'actions']
+  );
   readonly loading = signal(false);
   readonly errorMessage = signal('');
   readonly busyIds = signal<ReadonlySet<number>>(new Set());
 
   ngOnInit(): void {
     this.load();
+  }
+
+  canCreate(): boolean {
+    return this.auth.isAdmin();
   }
 
   load(): void {
@@ -60,12 +70,18 @@ export class LoansList implements OnInit {
   }
 
   canEdit(loan: Loan): boolean {
-    return loan.status === 'ACTIVE';
+    return this.auth.isAdmin() && loan.status === 'ACTIVE';
   }
 
   canDelete(loan: Loan): boolean {
+    if (!this.auth.isAdmin()) return false;
+
     if (loan.status === 'PENDING') return true;
-    if (loan.status === 'RETURNED' || loan.status === 'REJECTED') return this.auth.isAdmin();
+
+    if (loan.status === 'RETURNED' || loan.status === 'REJECTED') {
+      return this.auth.isAdmin();
+    }
+
     return false;
   }
 
