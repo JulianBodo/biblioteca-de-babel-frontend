@@ -42,14 +42,6 @@
   line-height: 1.4;
 }
 
-.header-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
 .btn-logout {
   position: absolute;
   top: 12px;

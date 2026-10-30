@@ -1,7 +1,7 @@
 <div class="dashboard-container">
   <header class="dashboard-header">
     <div class="dashboard-brand">
-      <button (click)="logout()" class="btn-logout">
+      <button type="button" class="btn-logout" (click)="logout()">
         <mat-icon>exit_to_app</mat-icon>
         Cerrar Sesión
       </button>
@@ -22,7 +22,7 @@
       <div class="card-icon">📚</div>
       <h2>Libros</h2>
       <p>Gestión del catálogo, altas, modificaciones y disponibilidad.</p>
-      <a routerLink="/books" class="btn">Ir a Libros</a>
+      <a class="btn" routerLink="/books">Ir a Libros</a>
     </div>
 
     @if (isAdmin()) {
@@ -30,14 +30,14 @@
         <div class="card-icon">👥</div>
         <h2>Lectores</h2>
         <p>Administración de usuarios registrados y credenciales.</p>
-        <a routerLink="/readers" class="btn">Ir a Lectores</a>
+        <a class="btn" routerLink="/readers">Ir a Lectores</a>
       </div>
 
       <div class="card">
         <div class="card-icon">📋</div>
         <h2>Préstamos</h2>
         <p>Control de salidas, devoluciones y libros pendientes.</p>
-        <a routerLink="/loans" class="btn">Ir a Préstamos</a>
+        <a class="btn" routerLink="/loans">Ir a Préstamos</a>
       </div>
     }
 
@@ -46,7 +46,7 @@
         <div class="card-icon">📖</div>
         <h2>Mis préstamos</h2>
         <p>Consultá tus préstamos activos y sus fechas de vencimiento.</p>
-        <a routerLink="/loans" class="btn">Ver mis préstamos</a>
+        <a class="btn" routerLink="/loans">Ver mis préstamos</a>
       </div>
     }
   </div>

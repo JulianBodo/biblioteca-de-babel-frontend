@@ -5,186 +5,195 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
   <mat-dialog-content class="form-grid">
     @if (loadingCatalogs()) {
-    <div class="state-panel span-2" role="status">
-      <mat-spinner diameter="32"></mat-spinner>
-      <span>Cargando catálogos…</span>
-    </div>
+      <div class="state-panel span-2" role="status">
+        <mat-spinner diameter="32" />
+        <span>Cargando catálogos…</span>
+      </div>
     } @else {
-    <!-- Título -->
-    <mat-form-field appearance="outline" class="span-2">
-      <mat-label>Título</mat-label>
-      <input matInput formControlName="title" />
-
-      @if (form.controls.title.hasError('required')) {
-      <mat-error>El título es obligatorio</mat-error>
-      }
-    </mat-form-field>
-
-    <!-- ISBN -->
-    <mat-form-field appearance="outline">
-      <mat-label>ISBN</mat-label>
-      <input matInput formControlName="isbn" />
-
-      @if (form.controls.isbn.hasError('required')) {
-      <mat-error>El ISBN es obligatorio</mat-error>
-      }
-    </mat-form-field>
-
-    <!-- Año de publicación -->
-    <mat-form-field appearance="outline">
-      <mat-label>Año de publicación</mat-label>
-      <input matInput type="number" formControlName="publicationYear" />
-
-      @if (form.controls.publicationYear.invalid) {
-      <mat-error>Ingresá un año válido</mat-error>
-      }
-    </mat-form-field>
-
-    <!-- Género -->
-    <mat-form-field appearance="outline">
-      <mat-label>Género</mat-label>
-      <mat-select formControlName="genreId">
-        @for (genre of genres(); track genre.id) {
-        <mat-option [value]="genre.id">
-          {{ genre.name }}
-        </mat-option>
-        }
-      </mat-select>
-
-      @if (form.controls.genreId.invalid) {
-      <mat-error>Elegí un género</mat-error>
-      }
-    </mat-form-field>
-
-    <!-- Editorial -->
-    <div class="span-2">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Editorial</mat-label>
-        <mat-select formControlName="publisherId">
-          @for (publisher of publishers(); track publisher.id) {
-          <mat-option [value]="publisher.id">
-            {{ publisher.name }}
-          </mat-option>
-          }
-        </mat-select>
-
-        @if (form.controls.publisherId.invalid) {
-        <mat-error>Elegí una editorial</mat-error>
+      <mat-form-field appearance="outline" class="span-2">
+        <mat-label>Título</mat-label>
+        <input matInput formControlName="title" />
+        @if (form.controls.title.hasError('required')) {
+          <mat-error>El título es obligatorio</mat-error>
         }
       </mat-form-field>
 
-      <button mat-button type="button" (click)="openCatalogForm('publisher')" [disabled]="creatingCatalog()">
-        + Crear editorial
-      </button>
-    </div>
-
-    <!-- Autores -->
-    <div class="span-2">
-      <mat-form-field appearance="outline" class="full-width">
-        <mat-label>Autores</mat-label>
-        <mat-select formControlName="authorIds" multiple>
-          @for (author of authors(); track author.id) {
-          <mat-option [value]="author.id">
-            {{ author.lastName }}, {{ author.firstName }}
-          </mat-option>
-          }
-        </mat-select>
-
-        @if (form.controls.authorIds.invalid) {
-        <mat-error>Elegí al menos un autor</mat-error>
+      <mat-form-field appearance="outline">
+        <mat-label>ISBN</mat-label>
+        <input matInput formControlName="isbn" />
+        @if (form.controls.isbn.hasError('required')) {
+          <mat-error>El ISBN es obligatorio</mat-error>
         }
       </mat-form-field>
 
-      <button mat-button type="button" (click)="openCatalogForm('author')" [disabled]="creatingCatalog()">
-        + Crear autor
-      </button>
-    </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Año de publicación</mat-label>
+        <input matInput type="number" formControlName="publicationYear" />
+        @if (form.controls.publicationYear.invalid) {
+          <mat-error>Ingresá un año válido</mat-error>
+        }
+      </mat-form-field>
 
-    <!-- Ejemplares -->
-    <mat-form-field appearance="outline">
-      <mat-label>Ejemplares totales</mat-label>
-      <input matInput type="number" formControlName="totalCopies" />
-
-      @if (form.controls.totalCopies.invalid) {
-      <mat-error>Debe haber al menos un ejemplar</mat-error>
-      }
-    </mat-form-field>
-    }
-
-    <!-- Error al guardar el libro -->
-    @if (errorMessage()) {
-    <p class="form-error span-2" role="alert">
-      {{ errorMessage() }}
-    </p>
-    }
-
-    <!-- Formulario auxiliar para crear autor o editorial -->
-    @if (newCatalogType(); as type) {
-    <section class="catalog-create-form span-2">
-      @if (type === 'author') {
-      <h3>Crear autor</h3>
-
-      <div [formGroup]="authorForm">
-        <mat-form-field appearance="outline">
-          <mat-label>Nombre</mat-label>
-          <input matInput formControlName="firstName" />
-
-          @if (authorForm.controls.firstName.hasError('required')) {
-          <mat-error>El nombre es obligatorio</mat-error>
+      <mat-form-field appearance="outline">
+        <mat-label>Género</mat-label>
+        <mat-select formControlName="genreId">
+          @for (genre of genres(); track genre.id) {
+            <mat-option [value]="genre.id">{{ genre.name }}</mat-option>
           }
-        </mat-form-field>
+        </mat-select>
+        @if (form.controls.genreId.invalid) {
+          <mat-error>Elegí un género</mat-error>
+        }
+      </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Apellido</mat-label>
-          <input matInput formControlName="lastName" />
-
-          @if (authorForm.controls.lastName.hasError('required')) {
-          <mat-error>El apellido es obligatorio</mat-error>
-          }
-        </mat-form-field>
-
-        <button mat-flat-button type="button" (click)="createAuthor()" [disabled]="creatingCatalog()">
-          {{ creatingCatalog() ? 'Creando…' : 'Guardar autor' }}
-        </button>
-      </div>
-      } @else if (type === 'publisher') {
-      <h3>Crear editorial</h3>
-
-      <div [formGroup]="publisherForm">
+      <div class="span-2">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Nombre</mat-label>
-          <input matInput formControlName="name" />
-
-          @if (publisherForm.controls.name.hasError('required')) {
-          <mat-error>El nombre es obligatorio</mat-error>
+          <mat-label>Editorial</mat-label>
+          <mat-select formControlName="publisherId">
+            @for (publisher of publishers(); track publisher.id) {
+              <mat-option [value]="publisher.id">{{ publisher.name }}</mat-option>
+            }
+          </mat-select>
+          @if (form.controls.publisherId.invalid) {
+            <mat-error>Elegí una editorial</mat-error>
           }
         </mat-form-field>
 
-        <button mat-flat-button type="button" (click)="createPublisher()" [disabled]="creatingCatalog()">
-          {{ creatingCatalog() ? 'Creando…' : 'Guardar editorial' }}
+        <button
+          mat-button
+          type="button"
+          (click)="openCatalogForm('publisher')"
+          [disabled]="creatingCatalog()"
+        >
+          + Crear editorial
         </button>
       </div>
-      }
 
-      @if (catalogErrorMessage()) {
-      <p class="form-error" role="alert">
-        {{ catalogErrorMessage() }}
+      <div class="span-2">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Autores</mat-label>
+          <mat-select formControlName="authorIds" multiple>
+            @for (author of authors(); track author.id) {
+              <mat-option [value]="author.id">
+                {{ author.lastName }}, {{ author.firstName }}
+              </mat-option>
+            }
+          </mat-select>
+          @if (form.controls.authorIds.invalid) {
+            <mat-error>Elegí al menos un autor</mat-error>
+          }
+        </mat-form-field>
+
+        <button
+          mat-button
+          type="button"
+          (click)="openCatalogForm('author')"
+          [disabled]="creatingCatalog()"
+        >
+          + Crear autor
+        </button>
+      </div>
+
+      <mat-form-field appearance="outline">
+        <mat-label>Ejemplares totales</mat-label>
+        <input matInput type="number" formControlName="totalCopies" />
+        @if (form.controls.totalCopies.invalid) {
+          <mat-error>Debe haber al menos un ejemplar</mat-error>
+        }
+      </mat-form-field>
+    }
+
+    @if (errorMessage()) {
+      <p class="form-error span-2" role="alert">
+        {{ errorMessage() }}
       </p>
-      }
+    }
 
-      <button mat-button type="button" (click)="cancelCatalogForm()" [disabled]="creatingCatalog()">
-        Cancelar creación
-      </button>
-    </section>
+    @if (newCatalogType(); as type) {
+      <section class="catalog-create-form span-2">
+        @if (type === 'author') {
+          <h3>Crear autor</h3>
+          <div [formGroup]="authorForm">
+            <mat-form-field appearance="outline">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="firstName" />
+              @if (authorForm.controls.firstName.hasError('required')) {
+                <mat-error>El nombre es obligatorio</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Apellido</mat-label>
+              <input matInput formControlName="lastName" />
+              @if (authorForm.controls.lastName.hasError('required')) {
+                <mat-error>El apellido es obligatorio</mat-error>
+              }
+            </mat-form-field>
+
+            <button
+              mat-flat-button
+              type="button"
+              (click)="createAuthor()"
+              [disabled]="creatingCatalog()"
+            >
+              {{ creatingCatalog() ? 'Creando…' : 'Guardar autor' }}
+            </button>
+          </div>
+        } @else {
+          <h3>Crear editorial</h3>
+          <div [formGroup]="publisherForm">
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Nombre</mat-label>
+              <input matInput formControlName="name" />
+              @if (publisherForm.controls.name.hasError('required')) {
+                <mat-error>El nombre es obligatorio</mat-error>
+              }
+            </mat-form-field>
+
+            <button
+              mat-flat-button
+              type="button"
+              (click)="createPublisher()"
+              [disabled]="creatingCatalog()"
+            >
+              {{ creatingCatalog() ? 'Creando…' : 'Guardar editorial' }}
+            </button>
+          </div>
+        }
+
+        @if (catalogErrorMessage()) {
+          <p class="form-error" role="alert">
+            {{ catalogErrorMessage() }}
+          </p>
+        }
+
+        <button
+          mat-button
+          type="button"
+          (click)="cancelCatalogForm()"
+          [disabled]="creatingCatalog()"
+        >
+          Cancelar creación
+        </button>
+      </section>
     }
   </mat-dialog-content>
 
   <mat-dialog-actions align="end">
-    <button mat-button type="button" mat-dialog-close [disabled]="saving() || creatingCatalog()">
+    <button
+      mat-button
+      type="button"
+      mat-dialog-close
+      [disabled]="saving() || creatingCatalog()"
+    >
       Cancelar
     </button>
 
-    <button mat-flat-button type="submit" [disabled]="saving() || loadingCatalogs() || creatingCatalog()">
+    <button
+      mat-flat-button
+      type="submit"
+      [disabled]="saving() || loadingCatalogs() || creatingCatalog()"
+    >
       {{ saving() ? 'Guardando…' : 'Guardar libro' }}
     </button>
   </mat-dialog-actions>

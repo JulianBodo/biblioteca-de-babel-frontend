@@ -1,12 +1,14 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { finalize, forkJoin } from 'rxjs';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { finalize, forkJoin } from 'rxjs';
+
 import { Author, Book, Genre, Publisher } from '../../shared/models/book.model';
 import { BookService } from '../../shared/services/book.service';
 import { CatalogService } from '../../shared/services/catalog.service';
@@ -18,6 +20,7 @@ export interface BookFormData {
 
 @Component({
   selector: 'app-book-form',
+  standalone: true,
   imports: [
     ReactiveFormsModule,
     MatDialogModule,
@@ -31,45 +34,56 @@ export interface BookFormData {
   styleUrl: './book-form.css',
 })
 export class BookForm implements OnInit {
-  private readonly formBuilder = inject(FormBuilder);
+  private readonly fb = inject(FormBuilder);
   private readonly bookService = inject(BookService);
   private readonly catalogService = inject(CatalogService);
   private readonly dialogRef = inject<MatDialogRef<BookForm, Book>>(MatDialogRef);
   private readonly data = inject<BookFormData>(MAT_DIALOG_DATA);
 
   readonly editing = !!this.data.book;
+
   readonly loadingCatalogs = signal(true);
   readonly saving = signal(false);
+  readonly creatingCatalog = signal(false);
+
   readonly errorMessage = signal('');
+  readonly catalogErrorMessage = signal('');
+  readonly newCatalogType = signal<'author' | 'publisher' | null>(null);
 
   readonly authors = signal<Author[]>([]);
   readonly genres = signal<Genre[]>([]);
   readonly publishers = signal<Publisher[]>([]);
 
-  readonly authorForm = this.formBuilder.nonNullable.group({
+  readonly authorForm = this.fb.nonNullable.group({
     firstName: ['', Validators.required],
     lastName: ['', Validators.required],
   });
 
-  readonly publisherForm = this.formBuilder.nonNullable.group({
+  readonly publisherForm = this.fb.nonNullable.group({
     name: ['', Validators.required],
   });
 
-  readonly creatingCatalog = signal(false);
-  readonly catalogErrorMessage = signal('');
-  readonly newCatalogType = signal<'author' | 'genre' | 'publisher' | null>(null);
-
-  readonly form = this.formBuilder.nonNullable.group({
-    title: [this.data.book?.title ?? '', [Validators.required]],
-    isbn: [this.data.book?.isbn ?? '', [Validators.required]],
+  readonly form = this.fb.nonNullable.group({
+    title: [this.data.book?.title ?? '', Validators.required],
+    isbn: [this.data.book?.isbn ?? '', Validators.required],
     publicationYear: [
       this.data.book?.publicationYear ?? new Date().getFullYear(),
-      [Validators.required, Validators.min(1), Validators.max(new Date().getFullYear())],
+      [
+        Validators.required,
+        Validators.min(1),
+        Validators.max(new Date().getFullYear()),
+      ],
     ],
-    totalCopies: [this.data.book?.totalCopies ?? 1, [Validators.required, Validators.min(1)]],
-    genreId: [this.data.book?.genreId ?? 0, [Validators.min(1)]],
-    publisherId: [this.data.book?.publisherId ?? 0, [Validators.min(1)]],
-    authorIds: [this.data.book?.authors.map((a) => a.id) ?? ([] as number[]), [Validators.required]],
+    totalCopies: [
+      this.data.book?.totalCopies ?? 1,
+      [Validators.required, Validators.min(1)],
+    ],
+    genreId: [this.data.book?.genreId ?? 0, Validators.min(1)],
+    publisherId: [this.data.book?.publisherId ?? 0, Validators.min(1)],
+    authorIds: [
+      this.data.book?.authors.map((author) => author.id) ?? [],
+      Validators.required,
+    ],
   });
 
   ngOnInit(): void {
@@ -85,8 +99,11 @@ export class BookForm implements OnInit {
           this.genres.set(genres);
           this.publishers.set(publishers);
         },
-        error: (err) =>
-          this.errorMessage.set(apiErrorMessage(err, 'No se pudieron cargar los catálogos.')),
+        error: (err) => {
+          this.errorMessage.set(
+            apiErrorMessage(err, 'No se pudieron cargar los catálogos.'),
+          );
+        },
       });
   }
 
@@ -104,11 +121,16 @@ export class BookForm implements OnInit {
       ? this.bookService.updateBook(this.data.book.id, value)
       : this.bookService.createBook(value);
 
-    request.pipe(finalize(() => this.saving.set(false))).subscribe({
-      next: (book) => this.dialogRef.close(book),
-      error: (err) =>
-        this.errorMessage.set(apiErrorMessage(err, 'No se pudo guardar el libro.')),
-    });
+    request
+      .pipe(finalize(() => this.saving.set(false)))
+      .subscribe({
+        next: (book) => this.dialogRef.close(book),
+        error: (err) => {
+          this.errorMessage.set(
+            apiErrorMessage(err, 'No se pudo guardar el libro.'),
+          );
+        },
+      });
   }
 
   openCatalogForm(type: 'author' | 'publisher'): void {
@@ -144,10 +166,11 @@ export class BookForm implements OnInit {
 
           this.cancelCatalogForm();
         },
-        error: (err) =>
+        error: (err) => {
           this.catalogErrorMessage.set(
             apiErrorMessage(err, 'No se pudo crear el autor.'),
-          ),
+          );
+        },
       });
   }
 
@@ -167,12 +190,14 @@ export class BookForm implements OnInit {
         next: (publisher) => {
           this.publishers.update((items) => [...items, publisher]);
           this.form.controls.publisherId.setValue(publisher.id);
+
           this.cancelCatalogForm();
         },
-        error: (err) =>
+        error: (err) => {
           this.catalogErrorMessage.set(
             apiErrorMessage(err, 'No se pudo crear la editorial.'),
-          ),
+          );
+        },
       });
   }
 }
