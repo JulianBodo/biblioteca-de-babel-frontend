@@ -10,6 +10,11 @@
   grid-column: 1 / -1;
 }
 
+.form-grid .span-2 > button {
+  margin-top: -16px;
+  margin-bottom: 12px;
+}
+
 .state-panel {
   display: flex;
   align-items: center;
@@ -25,6 +30,10 @@
 
 .full-width {
   width: 100%;
+}
+
+form button {
+  border-radius: 6px !important;
 }
 
 @media (max-width: 600px) {

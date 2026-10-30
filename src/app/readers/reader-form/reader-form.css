@@ -14,6 +14,10 @@
   color: var(--mat-sys-error);
 }
 
+form button {
+  border-radius: 6px !important;
+}
+
 @media (max-width: 600px) {
   .form-grid {
     grid-template-columns: minmax(0, 1fr);
