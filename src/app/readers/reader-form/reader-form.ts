@@ -5,6 +5,7 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { finalize } from 'rxjs';
+
 import { Reader } from '../../shared/models/reader.model';
 import { ReaderService } from '../../shared/services/reader.service';
 import { apiErrorMessage } from '../../shared/utils/api-error';
@@ -36,10 +37,13 @@ export class ReaderForm {
   readonly errorMessage = signal('');
 
   readonly form = this.formBuilder.nonNullable.group({
-    firstName: [this.data.reader?.firstName ?? '', [Validators.required]],
-    lastName: [this.data.reader?.lastName ?? '', [Validators.required]],
-    email: [this.data.reader?.email ?? '', [Validators.required, Validators.email]],
-    dni: [this.data.reader?.dni ?? '', [Validators.required]],
+    firstName: [this.data.reader?.firstName ?? '', Validators.required],
+    lastName: [this.data.reader?.lastName ?? '', Validators.required],
+    email: [
+      this.data.reader?.email ?? '',
+      [Validators.required, Validators.email],
+    ],
+    dni: [this.data.reader?.dni ?? '', Validators.required],
   });
 
   submit(): void {
@@ -57,9 +61,11 @@ export class ReaderForm {
       : this.readerService.createReader(value);
 
     request.pipe(finalize(() => this.saving.set(false))).subscribe({
-      next: (reader) => this.dialogRef.close(reader),
-      error: (err) =>
-        this.errorMessage.set(apiErrorMessage(err, 'No se pudo guardar el lector.')),
+      next: reader => this.dialogRef.close(reader),
+      error: err =>
+        this.errorMessage.set(
+          apiErrorMessage(err, 'No se pudo guardar el lector.')
+        ),
     });
   }
 }

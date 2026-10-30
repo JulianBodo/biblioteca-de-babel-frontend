@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, inject, signal, computed } from '@angular/core';
+import { Component, OnInit, computed, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
+
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -8,7 +10,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
-import { finalize } from 'rxjs';
+
 import { AuthService } from '../../auth/auth.service';
 import { Loan } from '../../shared/models/loan.model';
 import { LoanService } from '../../shared/services/loan.service';
@@ -19,13 +21,13 @@ import { LoanForm, LoanFormData } from '../loan-form/loan-form';
   selector: 'app-loans-list',
   imports: [
     CommonModule,
+    RouterLink,
     MatButtonModule,
     MatTableModule,
     MatIconModule,
     MatChipsModule,
     MatProgressSpinnerModule,
     MatCardModule,
-    RouterLink,
   ],
   templateUrl: './loans-list.html',
   styleUrl: './loans-list.css',
@@ -41,8 +43,9 @@ export class LoansList implements OnInit {
   readonly displayedColumns = computed(() =>
     this.isReader()
       ? ['id', 'book', 'status', 'dueDate', 'mora']
-      : ['id', 'reader', 'book', 'status', 'dueDate', 'mora', 'actions']
+      : ['id', 'reader', 'book', 'status', 'dueDate', 'mora', 'actions'],
   );
+
   readonly loading = signal(false);
   readonly errorMessage = signal('');
   readonly busyIds = signal<ReadonlySet<number>>(new Set());
@@ -63,9 +66,12 @@ export class LoansList implements OnInit {
       .getLoans()
       .pipe(finalize(() => this.loading.set(false)))
       .subscribe({
-        next: (loans) => this.dataSource.set(loans),
-        error: (err) =>
-          this.errorMessage.set(apiErrorMessage(err, 'No se pudieron cargar los préstamos.')),
+        next: loans => this.dataSource.set(loans),
+        error: err => {
+          this.errorMessage.set(
+            apiErrorMessage(err, 'No se pudieron cargar los préstamos.'),
+          );
+        },
       });
   }
 
@@ -74,35 +80,40 @@ export class LoansList implements OnInit {
   }
 
   canDelete(loan: Loan): boolean {
-    if (!this.auth.isAdmin()) return false;
-
-    if (loan.status === 'PENDING') return true;
-
-    if (loan.status === 'RETURNED' || loan.status === 'REJECTED') {
-      return this.auth.isAdmin();
-    }
-
-    return false;
+    return (
+      this.auth.isAdmin() &&
+      ['PENDING', 'RETURNED', 'REJECTED'].includes(loan.status)
+    );
   }
 
   create(): void {
-    this.openForm({}).subscribe((saved) => {
-      if (saved) this.dataSource.update((loans) => [saved, ...loans]);
+    this.openForm({}).subscribe(saved => {
+      if (saved) {
+        this.dataSource.update(loans => [saved, ...loans]);
+      }
     });
   }
 
   edit(loan: Loan): void {
-    this.openForm({ loan }).subscribe((saved) => {
+    this.openForm({ loan }).subscribe(saved => {
       if (saved) this.replace(saved);
     });
   }
 
   approve(loan: Loan): void {
-    this.run(loan, this.loanService.approve(loan.id), `No se pudo aprobar el préstamo #${loan.id}.`);
+    this.run(
+      loan,
+      this.loanService.approve(loan.id),
+      `No se pudo aprobar el préstamo #${loan.id}.`,
+    );
   }
 
   reject(loan: Loan): void {
-    this.run(loan, this.loanService.reject(loan.id), `No se pudo rechazar el préstamo #${loan.id}.`);
+    this.run(
+      loan,
+      this.loanService.reject(loan.id),
+      `No se pudo rechazar el préstamo #${loan.id}.`,
+    );
   }
 
   returnLoan(loan: Loan): void {
@@ -114,46 +125,64 @@ export class LoansList implements OnInit {
   }
 
   remove(loan: Loan): void {
-    if (!window.confirm(`¿Eliminar el préstamo #${loan.id} de "${loan.book.title}"?`)) return;
+    if (!window.confirm(`¿Eliminar el préstamo #${loan.id} de "${loan.book.title}"?`)) {
+      return;
+    }
 
     this.withBusy(loan.id, () => {
       this.loanService
         .deleteLoan(loan.id)
         .pipe(finalize(() => this.clearBusy(loan.id)))
         .subscribe({
-          next: () => this.dataSource.update((loans) => loans.filter((l) => l.id !== loan.id)),
-          error: (err) =>
+          next: () => {
+            this.dataSource.update(loans =>
+              loans.filter(item => item.id !== loan.id),
+            );
+          },
+          error: err => {
             this.errorMessage.set(
               apiErrorMessage(err, `No se pudo eliminar el préstamo #${loan.id}.`),
-            ),
+            );
+          },
         });
     });
   }
 
-  private run(loan: Loan, request: ReturnType<LoanService['approve']>, fallback: string): void {
+  private run(
+    loan: Loan,
+    request: ReturnType<LoanService['approve']>,
+    fallback: string,
+  ): void {
     this.withBusy(loan.id, () => {
       request.pipe(finalize(() => this.clearBusy(loan.id))).subscribe({
-        next: (updated) => this.replace(updated),
-        error: (err) => this.errorMessage.set(apiErrorMessage(err, fallback)),
+        next: updated => this.replace(updated),
+        error: err => {
+          this.errorMessage.set(apiErrorMessage(err, fallback));
+        },
       });
     });
   }
 
   private openForm(data: LoanFormData) {
     return this.dialog
-      .open<LoanForm, LoanFormData, Loan>(LoanForm, { data, width: '560px', maxWidth: '95vw' })
+      .open<LoanForm, LoanFormData, Loan>(LoanForm, {
+        data,
+        width: '560px',
+        maxWidth: '95vw',
+      })
       .afterClosed();
   }
 
   private withBusy(id: number, action: () => void): void {
     if (this.busyIds().has(id)) return;
+
     this.errorMessage.set('');
-    this.busyIds.update((ids) => new Set(ids).add(id));
+    this.busyIds.update(ids => new Set(ids).add(id));
     action();
   }
 
   private clearBusy(id: number): void {
-    this.busyIds.update((ids) => {
+    this.busyIds.update(ids => {
       const remaining = new Set(ids);
       remaining.delete(id);
       return remaining;
@@ -161,6 +190,8 @@ export class LoansList implements OnInit {
   }
 
   private replace(updated: Loan): void {
-    this.dataSource.update((loans) => loans.map((l) => (l.id === updated.id ? updated : l)));
+    this.dataSource.update(loans =>
+      loans.map(loan => loan.id === updated.id ? updated : loan),
+    );
   }
 }

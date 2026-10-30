@@ -1,42 +1,45 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Reader, ReaderUpdate, ReaderCreate } from '../models/reader.model';
+
+import { Reader, ReaderCreate, ReaderUpdate } from '../models/reader.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ReaderService {
-  private readonly apiUrl = 'http://localhost:3000/api';
-
-  constructor(private readonly httpClient: HttpClient) {}
+  private readonly http = inject(HttpClient);
+  private readonly apiUrl = 'http://localhost:3000/api/readers';
 
   getReaders(status?: string): Observable<Reader[]> {
-    const url = status ? `${this.apiUrl}/readers?status=${status}` : `${this.apiUrl}/readers`;
-    return this.httpClient.get<Reader[]>(url);
+    const params = status
+      ? new HttpParams().set('status', status)
+      : undefined;
+
+    return this.http.get<Reader[]>(this.apiUrl, { params });
   }
 
   getReader(id: number): Observable<Reader> {
-    return this.httpClient.get<Reader>(`${this.apiUrl}/readers/${id}`);
+    return this.http.get<Reader>(`${this.apiUrl}/${id}`);
   }
-  
+
   createReader(input: ReaderCreate): Observable<Reader> {
-    return this.httpClient.post<Reader>(`${this.apiUrl}/readers`, input);
+    return this.http.post<Reader>(this.apiUrl, input);
   }
 
   updateReader(id: number, changes: ReaderUpdate): Observable<Reader> {
-    return this.httpClient.put<Reader>(`${this.apiUrl}/readers/${id}`, changes);
+    return this.http.put<Reader>(`${this.apiUrl}/${id}`, changes);
   }
 
   suspendReader(id: number): Observable<Reader> {
-    return this.httpClient.patch<Reader>(`${this.apiUrl}/readers/${id}/suspend`, {});
+    return this.http.patch<Reader>(`${this.apiUrl}/${id}/suspend`, {});
   }
 
   reactivateReader(id: number): Observable<Reader> {
-    return this.httpClient.patch<Reader>(`${this.apiUrl}/readers/${id}/reactivate`, {});
+    return this.http.patch<Reader>(`${this.apiUrl}/${id}/reactivate`, {});
   }
 
   deleteReader(id: number): Observable<void> {
-    return this.httpClient.delete<void>(`${this.apiUrl}/readers/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 }
