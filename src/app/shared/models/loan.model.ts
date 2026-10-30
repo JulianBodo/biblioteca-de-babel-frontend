@@ -1,5 +1,5 @@
-import { Reader } from './reader.model';
 import { Author, Genre, Publisher } from './book.model';
+import { Reader } from './reader.model';
 
 export type LoanStatus = 'PENDING' | 'ACTIVE' | 'RETURNED' | 'REJECTED';
 

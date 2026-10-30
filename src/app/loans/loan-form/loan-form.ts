@@ -1,12 +1,18 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { finalize } from 'rxjs';
+
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
-import { finalize } from 'rxjs';
+
 import { Book } from '../../shared/models/book.model';
 import { Loan } from '../../shared/models/loan.model';
 import { Reader } from '../../shared/models/reader.model';
@@ -43,6 +49,7 @@ export class LoanForm implements OnInit {
   readonly summary = this.data.loan
     ? `"${this.data.loan.book.title}" — ${this.data.loan.reader.firstName} ${this.data.loan.reader.lastName}`
     : '';
+
   readonly loadingReaders = signal(false);
   readonly loadingBooks = signal(false);
   readonly saving = signal(false);
@@ -52,32 +59,39 @@ export class LoanForm implements OnInit {
   readonly books = signal<Book[]>([]);
 
   readonly createForm = this.formBuilder.nonNullable.group({
-    readerId: [0, [Validators.min(1)]],
-    bookId: [{ value: 0, disabled: true }, [Validators.min(1)]],
+    readerId: [0, Validators.min(1)],
+    bookId: [{ value: 0, disabled: true }, Validators.min(1)],
   });
 
   readonly editForm = this.formBuilder.nonNullable.group({
-    dueDate: [this.toDateInput(this.data.loan?.dueDate), [Validators.required]],
+    dueDate: [this.toDateInput(this.data.loan?.dueDate), Validators.required],
   });
 
   ngOnInit(): void {
     if (this.editing) return;
 
     this.loadingReaders.set(true);
+
     this.readerService
       .getReaders('ACTIVE')
       .pipe(finalize(() => this.loadingReaders.set(false)))
       .subscribe({
-        next: (readers) => this.readers.set(readers),
-        error: (err) =>
-          this.errorMessage.set(apiErrorMessage(err, 'No se pudieron cargar los lectores.')),
+        next: readers => this.readers.set(readers),
+        error: err => {
+          this.errorMessage.set(
+            apiErrorMessage(err, 'No se pudieron cargar los lectores.'),
+          );
+        },
       });
 
-    this.createForm.controls.readerId.valueChanges.subscribe((readerId) => this.loadBooks(readerId));
+    this.createForm.controls.readerId.valueChanges.subscribe(readerId => {
+      this.loadBooks(readerId);
+    });
   }
 
   private loadBooks(readerId: number): void {
     const bookControl = this.createForm.controls.bookId;
+
     bookControl.reset(0);
     bookControl.disable();
     this.books.set([]);
@@ -85,16 +99,20 @@ export class LoanForm implements OnInit {
     if (!readerId) return;
 
     this.loadingBooks.set(true);
+
     this.loanService
       .getAvailableBooks(readerId)
       .pipe(finalize(() => this.loadingBooks.set(false)))
       .subscribe({
-        next: (books) => {
+        next: books => {
           this.books.set(books);
           bookControl.enable();
         },
-        error: (err) =>
-          this.errorMessage.set(apiErrorMessage(err, 'No se pudieron cargar los libros.')),
+        error: err => {
+          this.errorMessage.set(
+            apiErrorMessage(err, 'No se pudieron cargar los libros.'),
+          );
+        },
       });
   }
 
@@ -115,7 +133,11 @@ export class LoanForm implements OnInit {
     }
 
     const { readerId, bookId } = this.createForm.getRawValue();
-    this.finish(this.loanService.createLoan({ readerId, bookId }), 'No se pudo crear el préstamo.');
+
+    this.finish(
+      this.loanService.createLoan({ readerId, bookId }),
+      'No se pudo crear el préstamo.',
+    );
   }
 
   private submitEdit(loan: Loan): void {
@@ -125,17 +147,22 @@ export class LoanForm implements OnInit {
     }
 
     const { dueDate } = this.editForm.getRawValue();
+
     this.finish(
       this.loanService.updateDueDate(loan.id, dueDate),
       'No se pudo actualizar el vencimiento.',
     );
   }
 
-  private finish(request: ReturnType<LoanService['createLoan']>, fallback: string): void {
+  private finish(
+    request: ReturnType<LoanService['createLoan']>,
+    fallback: string,
+  ): void {
     this.saving.set(true);
+
     request.pipe(finalize(() => this.saving.set(false))).subscribe({
-      next: (loan) => this.dialogRef.close(loan),
-      error: (err) => this.errorMessage.set(apiErrorMessage(err, fallback)),
+      next: loan => this.dialogRef.close(loan),
+      error: err => this.errorMessage.set(apiErrorMessage(err, fallback)),
     });
   }
 

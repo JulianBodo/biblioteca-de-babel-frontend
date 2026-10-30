@@ -1,43 +1,46 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+
 import { Book } from '../models/book.model';
 import { Loan, LoanCreate } from '../models/loan.model';
 
 @Injectable({ providedIn: 'root' })
 export class LoanService {
+  private readonly http = inject(HttpClient);
   private readonly apiUrl = 'http://localhost:3000/api/loans';
 
-  constructor(private readonly httpClient: HttpClient) {}
-
   getLoans(): Observable<Loan[]> {
-    return this.httpClient.get<Loan[]>(this.apiUrl);
+    return this.http.get<Loan[]>(this.apiUrl);
   }
 
   getAvailableBooks(readerId: number): Observable<Book[]> {
-    return this.httpClient.get<Book[]>(`${this.apiUrl}/available?readerId=${readerId}`);
+    const params = new HttpParams().set('readerId', readerId);
+
+    return this.http.get<Book[]>(`${this.apiUrl}/available`, { params });
   }
 
   createLoan(input: LoanCreate): Observable<Loan> {
-    return this.httpClient.post<Loan>(this.apiUrl, input);
+    return this.http.post<Loan>(this.apiUrl, input);
   }
 
   deleteLoan(id: number): Observable<void> {
-    return this.httpClient.delete<void>(`${this.apiUrl}/${id}`);
+    return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
 
   approve(id: number): Observable<Loan> {
-    return this.httpClient.patch<Loan>(`${this.apiUrl}/${id}/approve`, {});
+    return this.http.patch<Loan>(`${this.apiUrl}/${id}/approve`, {});
   }
 
   reject(id: number): Observable<Loan> {
-    return this.httpClient.patch<Loan>(`${this.apiUrl}/${id}/reject`, {});
+    return this.http.patch<Loan>(`${this.apiUrl}/${id}/reject`, {});
   }
 
   returnLoan(id: number): Observable<Loan> {
-    return this.httpClient.patch<Loan>(`${this.apiUrl}/${id}/return`, {});
+    return this.http.patch<Loan>(`${this.apiUrl}/${id}/return`, {});
   }
+
   updateDueDate(id: number, dueDate: string): Observable<Loan> {
-    return this.httpClient.patch<Loan>(`${this.apiUrl}/${id}/due-date`, { dueDate });
+    return this.http.patch<Loan>(`${this.apiUrl}/${id}/due-date`, { dueDate });
   }
 }
