@@ -5,9 +5,49 @@
 
 .loans-page {
   box-sizing: border-box;
+  width: 100%;
   max-width: 1200px;
+  min-height: 100vh;
   margin: 0 auto;
   padding: 24px;
+}
+
+.header-actions {
+  margin-bottom: 20px;
+}
+
+.loans-card {
+  width: 100%;
+  overflow: hidden;
+  background: var(--mat-sys-surface);
+}
+
+mat-card-header {
+  display: flex;
+  align-items: center;
+  padding: 24px 24px 20px;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+mat-card-title {
+  color: var(--mat-sys-on-surface);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+mat-card-subtitle {
+  color: var(--mat-sys-on-surface-variant);
+}
+
+mat-card-content {
+  padding: 0;
 }
 
 .header-actions {
@@ -17,24 +57,163 @@
 .btn-back {
   display: inline-flex;
   align-items: center;
-  padding: 8px 16px;
+  justify-content: center;
+  gap: 6px;
   background-color: #f1f5f9;
   color: #334155;
+  height: 28px;
+  min-height: 28px;
+  padding: 0.6rem 1.2rem;
   border: 1px solid #cbd5e1;
   border-radius: 6px;
   text-decoration: none;
-  font-size: 0.9rem;
+  font-size: 12px;
   font-weight: 500;
-  transition: background-color 0.2s, border-color 0.2s;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
 
 .btn-back:hover {
   background-color: #e2e8f0;
-  border-color: #94a3b8;
 }
 
 .btn-new {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  min-height: 32px;
+  padding: 0 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  box-sizing: border-box;
   margin-left: auto;
+  flex-shrink: 0;
+}
+
+.btn-new mat-icon {
+  width: 18px;
+  height: 18px;
+  font-size: 18px;
+  line-height: 18px;
+}
+
+.table-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  outline: none;
+}
+
+.table-scroll:focus-visible {
+  box-shadow: inset 0 0 0 2px var(--mat-sys-primary);
+}
+
+table {
+  width: max-content;
+  min-width: 100%;
+  background: var(--mat-sys-surface);
+}
+
+.mat-mdc-header-cell {
+  min-width: 88px;
+  white-space: nowrap;
+  color: var(--mat-sys-on-surface-variant);
+  background: var(--mat-sys-surface-container);
+  font-weight: 600;
+}
+
+.mat-mdc-cell {
+  max-width: 280px;
+  padding-top: 12px;
+  padding-bottom: 12px;
+  color: var(--mat-sys-on-surface);
+  border-bottom-color: var(--mat-sys-outline-variant);
+}
+
+.mat-mdc-row:hover {
+  background: var(--mat-sys-surface-container-low);
+}
+
+  .actions-column {
+    width: 135px;
+    min-width: 135px;
+    max-width: 135px;
+    white-space: normal;
+    padding: 4px !important;
+  }
+
+.actions-column button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+  min-width: 0;
+  min-height: 26px;
+  height: 26px;
+  padding: 0 4px;
+  margin: 3px 0;
+  border-radius: 6px;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.actions-column button mat-icon {
+  width: 16px;
+  height: 16px;
+  min-width: 16px;
+  font-size: 16px;
+  line-height: 16px;
+  margin: 0;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 42px;
+  min-height: 28px;
+  box-sizing: border-box;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-badge.active {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.status-badge.pending {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.status-badge.rejected {
+  color: #991b1b;
+  background: #fee2e2;
+}
+
+.status-badge.returned {
+  color: #374151;
+  background: #e5e7eb;
+}
+
+.state-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  min-height: 260px;
+  color: var(--mat-sys-on-surface-variant);
 }
 
 .empty-text {
@@ -50,41 +229,69 @@
   padding: 12px 16px;
   border-radius: 6px;
   color: var(--mat-sys-on-error-container);
-  background-color: var(--mat-sys-error-container);
+  background: var(--mat-sys-error-container);
 }
 
-.status-active,
-.status-pending,
-.status-rejected,
-.status-returned {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 5px 10px;
-  border: none;
-  border-radius: 999px;
-  font-size: 0.875rem;
-  font-weight: 500;
-  line-height: 1.4;
-  white-space: nowrap;
-}
+@media (max-width: 600px) {
+  .loans-page {
+    padding: 16px;
+  }
 
-.status-active {
-  background-color: #dcfce7;
-  color: #166534;
-}
+  .actions-column {
+    width: 135px;
+    min-width: 135px;
+    max-width: 135px;
+    white-space: normal;
+    padding: 4px !important;
+  }
 
-.status-pending {
-  background-color: #fef3c7;
-  color: #92400e;
-}
+  .actions-column button {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: fit-content;
+    min-width: 0;
+    min-height: 26px;
+    height: 26px;
+    padding: 0 6px;
+    margin: 3px 0;
+    font-size: 10px;
+    line-height: 1;
+    box-sizing: border-box;
+    white-space: nowrap;
+  }
 
-.status-rejected {
-  background-color: #fee2e2;
-  color: #991b1b;
-}
+  .actions-column button mat-icon {
+    width: 14px;
+    height: 14px;
+    min-width: 14px;
+    font-size: 14px;
+    line-height: 14px;
+    margin-right: 3px;
+  }
 
-.status-returned {
-  background-color: #e5e7eb;
-  color: #374151;
+  mat-card-header {
+    flex-wrap: wrap;
+    padding: 20px 16px 16px;
+  }
+
+  .btn-new {
+    margin-left: 0;
+  }
+
+    .actions-column.mat-mdc-header-cell,
+  .actions-column.mat-mdc-cell {
+    position: relative;
+    z-index: 2;
+    background-clip: padding-box;
+  }
+
+  .actions-column.mat-mdc-header-cell {
+    background-color: var(--mat-sys-surface-container);
+  }
+
+  .actions-column.mat-mdc-cell {
+    background-color: var(--mat-sys-surface);
+    border-left: 1px solid var(--mat-sys-outline-variant);
+  }
 }

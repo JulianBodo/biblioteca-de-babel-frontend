@@ -1,6 +1,9 @@
 <main class="readers-page">
   <div class="header-actions">
-    <a routerLink="/home" class="btn-back">↩ Volver al Menú</a>
+    <a mat-button routerLink="/home" class="btn-back">
+      <mat-icon>arrow_back</mat-icon>
+      Volver
+    </a>
   </div>
   <mat-card appearance="outlined" class="readers-card">
     <mat-card-header>
@@ -54,10 +57,15 @@
           <ng-container matColumnDef="status">
             <th mat-header-cell *matHeaderCellDef>Estado</th>
             <td mat-cell *matCellDef="let reader">
-              <span class="status-badge" [class.status-active]="reader.readerStatus.status === 'ACTIVE'"
-                [class.status-suspended]="reader.readerStatus.status === 'SUSPENDED'"
-                [class.status-inactive]="reader.readerStatus.status === 'INACTIVE'">
-                {{ reader.readerStatus.status }}
+              <span class="status-badge" [class.active]="reader.readerStatus.status === 'ACTIVE'"
+                [class.suspended]="reader.readerStatus.status === 'SUSPENDED'"
+                [class.inactive]="reader.readerStatus.status === 'INACTIVE'">
+                {{
+                reader.readerStatus.status === 'ACTIVE' ? 'ACTIVO' :
+                reader.readerStatus.status === 'SUSPENDED' ? 'SUSPENDIDO' :
+                reader.readerStatus.status === 'INACTIVE' ? 'INACTIVO' :
+                reader.readerStatus.status
+                }}
               </span>
             </td>
           </ng-container>
@@ -70,8 +78,10 @@
           </ng-container>
 
           <ng-container matColumnDef="actions" stickyEnd>
-            <th mat-header-cell *matHeaderCellDef>Acciones</th>
-            <td mat-cell *matCellDef="let reader">
+            <th mat-header-cell *matHeaderCellDef class="actions-column">
+              Acciones
+            </th>
+            <td mat-cell *matCellDef="let reader" class="actions-column">
               <button mat-button type="button" *ngIf="reader.readerStatus.status !== 'SUSPENDED'"
                 [disabled]="busyIds().has(reader.id)" (click)="suspend(reader)">
                 <mat-icon>block</mat-icon>
