@@ -26,9 +26,9 @@
 }
 
 .login-header {
-  text-align: center;
   margin-bottom: 28px;
   padding: 0 8px;
+  text-align: center;
 }
 
 .login-brand {
@@ -41,31 +41,32 @@
 .brand-icon {
   width: 44px;
   height: 44px;
+  color: #2563eb !important;
   font-size: 44px;
   line-height: 1;
-  color: var(--mat-sys-primary, #2563eb);
+  -webkit-text-fill-color: #2563eb !important;
 }
 
 .login-header h1 {
+  margin: 0;
   color: var(--mat-sys-on-surface, #1e293b);
   font-size: clamp(1.3rem, 3.5vw + 0.3rem, 1.8rem);
-  line-height: 1.25;
   font-weight: 700;
-  margin: 0;
+  line-height: 1.25;
   letter-spacing: 0.025em;
   overflow-wrap: anywhere;
 }
 
 .login-header p {
+  margin: 10px 0 0;
   color: var(--mat-sys-on-surface-variant, #64748b);
   font-size: clamp(0.85rem, 1.8vw + 0.3rem, 0.95rem);
-  margin: 10px 0 0;
   line-height: 1.4;
 }
 
 .login-card {
-  width: 100%;
   box-sizing: border-box;
+  width: 100%;
   border-radius: 12px;
 }
 
@@ -90,27 +91,27 @@
 }
 
 .error-text {
+  margin: 4px 0 12px;
   color: var(--mat-sys-error, #ba1a1a);
   font-size: 0.875rem;
-  margin: 4px 0 12px;
 }
 
 .btn-login {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: auto !important;
+  min-height: 44px;
+  margin-top: 0.5rem;
+  padding: 0.75rem 2rem !important;
+  border: none !important;
+  border-radius: 6px !important;
   background-color: #2563eb !important;
   color: #ffffff !important;
-  border: none !important;
-  padding: 0.75rem 2rem !important;
-  border-radius: 6px !important;
   font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  height: auto !important;
-  min-height: 44px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 0.5rem;
 }
 
 .btn-login:hover:not(:disabled) {
@@ -146,14 +147,4 @@
   .login-header {
     margin-bottom: 18px;
   }
-
-}
-
-.brand-icon {
-  width: 44px;
-  height: 44px;
-  font-size: 44px;
-  line-height: 1;
-  color: #2563eb !important;
-  -webkit-text-fill-color: #2563eb !important;
 }
