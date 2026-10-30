@@ -7,7 +7,6 @@
 .login-page {
   box-sizing: border-box;
   display: flex;
-  align-items: flex-start;
   justify-content: center;
   width: 100%;
   min-height: 100vh;
@@ -72,7 +71,6 @@
 
 .login-card mat-card-header {
   margin-bottom: 16px;
-  padding-bottom: 0;
 }
 
 .login-card mat-card-subtitle {
@@ -100,17 +98,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: auto !important;
   min-height: 44px;
   margin-top: 0.5rem;
   padding: 0.75rem 2rem !important;
-  border: none !important;
   border-radius: 6px !important;
   background-color: #2563eb !important;
   color: #ffffff !important;
   font-size: 1rem;
   font-weight: 500;
-  cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
@@ -140,8 +135,7 @@
 
 @media (max-height: 650px) {
   .login-page {
-    padding-top: 20px;
-    padding-bottom: 20px;
+    padding-block: 20px;
   }
 
   .login-header {

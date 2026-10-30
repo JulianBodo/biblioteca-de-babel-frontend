@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+
 import { authGuard } from './auth/auth.guard';
 import { roleGuard } from './auth/role.guard';
 
@@ -10,31 +11,26 @@ export const routes: Routes = [
   },
   {
     path: 'login',
-    loadComponent: () =>
-      import('./auth/login/login').then((m) => m.Login),
+    loadComponent: () => import('./auth/login/login').then(m => m.Login),
   },
   {
     path: 'home',
-    loadComponent: () =>
-      import('./home/home').then((m) => m.Home),
+    loadComponent: () => import('./home/home').then(m => m.Home),
     canActivate: [authGuard],
   },
   {
     path: 'books',
-    loadComponent: () =>
-      import('./books/book-list/book-list').then((m) => m.BookList),
+    loadComponent: () => import('./books/book-list/book-list').then(m => m.BookList),
     canActivate: [authGuard],
   },
   {
     path: 'readers',
-    loadComponent: () =>
-      import('./readers/readers-list/readers-list').then((m) => m.ReadersList),
+    loadComponent: () => import('./readers/readers-list/readers-list').then(m => m.ReadersList),
     canActivate: [roleGuard('ADMIN')],
   },
   {
     path: 'loans',
-    loadComponent: () =>
-      import('./loans/loans-list/loans-list').then((m) => m.LoansList),
+    loadComponent: () => import('./loans/loans-list/loans-list').then(m => m.LoansList),
     canActivate: [roleGuard('ADMIN', 'READER')],
   },
 ];

@@ -1,5 +1,5 @@
-import { computed, Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 
@@ -14,17 +14,14 @@ export type Role = 'ADMIN' | 'READER';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
   private readonly apiUrl = 'http://localhost:3000/api/auth';
 
   readonly currentUser = signal<AuthUser | null>(this.readStoredUser());
   readonly isLoggedIn = signal(!!this.getToken());
   readonly role = computed(() => this.currentUser()?.role ?? null);
   readonly isAdmin = computed(() => this.role() === 'ADMIN');
-
-  constructor(
-    private readonly http: HttpClient,
-    private readonly router: Router,
-  ) {}
 
   login(email: string, password: string) {
     return this.http
@@ -44,7 +41,8 @@ export class AuthService {
   }
 
   hasRole(...roles: Role[]): boolean {
-    return this.role() !== null && roles.includes(this.role()!);
+    const role = this.role();
+    return role !== null && roles.includes(role);
   }
 
   getToken(): string | null {
@@ -58,7 +56,7 @@ export class AuthService {
     this.currentUser.set(null);
     this.isLoggedIn.set(false);
 
-    this.router.navigateByUrl('/login');
+    void this.router.navigateByUrl('/login');
   }
 
   private readStoredUser(): AuthUser | null {
@@ -69,6 +67,7 @@ export class AuthService {
     try {
       return JSON.parse(storedUser) as AuthUser;
     } catch {
+      localStorage.removeItem('user');
       return null;
     }
   }
