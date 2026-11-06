@@ -42,3 +42,52 @@ form button {
     min-width: 0;
   }
 }
+
+/* Contenedor de la sección de creación inline (autor / editorial) */
+.catalog-create-form {
+  background-color: var(--mat-sys-surface-container-low, #f8fafc);
+  border: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.catalog-create-form h3 {
+  margin: 0 0 12px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--mat-sys-on-surface, #1e293b);
+}
+
+/* Sub-grilla interna para los campos del formulario inline */
+.catalog-inline-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+/* Fila para alinear nombre y apellido del autor con margen consistente */
+.inline-fields-row {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .inline-fields-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+}
+
+/* Fila para ubicar los botones de Guardar y Cancelar ordenados abajo */
+.inline-actions-row {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 12px;
+  margin-top: 8px;
+}
