@@ -39,6 +39,7 @@ export class ReadersList implements OnInit {
   readonly isAdmin = this.auth.isAdmin;
   readonly dataSource = signal<Reader[]>([]);
   readonly displayedColumns = [
+    'id',
     'firstName',
     'lastName',
     'email',

@@ -43,7 +43,6 @@ form button {
   }
 }
 
-/* Contenedor de la sección de creación inline (autor / editorial) */
 .catalog-create-form {
   background-color: var(--mat-sys-surface-container-low, #f8fafc);
   border: 1px solid var(--mat-sys-outline-variant, #e2e8f0);
@@ -59,7 +58,6 @@ form button {
   color: var(--mat-sys-on-surface, #1e293b);
 }
 
-/* Sub-grilla interna para los campos del formulario inline */
 .catalog-inline-form {
   display: flex;
   flex-direction: column;
@@ -67,7 +65,6 @@ form button {
   width: 100%;
 }
 
-/* Fila para alinear nombre y apellido del autor con margen consistente */
 .inline-fields-row {
   display: flex;
   flex-direction: column;
@@ -83,7 +80,6 @@ form button {
   }
 }
 
-/* Fila para ubicar los botones de Guardar y Cancelar ordenados abajo */
 .inline-actions-row {
   display: flex;
   justify-content: flex-end;

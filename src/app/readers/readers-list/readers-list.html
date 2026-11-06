@@ -10,7 +10,9 @@
     <mat-card-header>
       <div class="header-content">
         <mat-card-title>Lectores</mat-card-title>
-        <mat-card-subtitle>Lista de usuarios registrados</mat-card-subtitle>
+        <mat-card-subtitle>
+          Lista de usuarios registrados (Total: {{ dataSource().length }})
+        </mat-card-subtitle>
       </div>
 
       <button mat-flat-button type="button" class="btn-new" (click)="create()">
@@ -39,6 +41,13 @@
 
       <div *ngIf="!loading() && dataSource().length > 0" class="table-scroll">
         <table mat-table [dataSource]="dataSource()">
+          
+          <!-- ➕ NUEVA COLUMNA DE ID -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef>ID</th>
+            <td mat-cell *matCellDef="let reader">{{ reader.id }}</td>
+          </ng-container>
+
           <ng-container matColumnDef="firstName">
             <th mat-header-cell *matHeaderCellDef>Nombre</th>
             <td mat-cell *matCellDef="let reader">{{ reader.firstName }}</td>

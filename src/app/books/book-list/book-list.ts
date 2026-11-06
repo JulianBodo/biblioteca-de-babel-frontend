@@ -49,6 +49,7 @@ export class BookList implements OnInit {
 
   readonly displayedColumns = computed(() => {
     const columns = [
+      'id',
       'title',
       'authors',
       'genre',
